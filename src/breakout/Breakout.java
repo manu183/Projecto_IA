@@ -2,6 +2,7 @@ package breakout;
 
 import javax.swing.JFrame;
 
+import pacman.RandomController;
 import utils.GameController;
 
 public class Breakout extends JFrame {
@@ -17,6 +18,10 @@ public class Breakout extends JFrame {
 		setResizable(false);
 		pack();
 		setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		Breakout game = new Breakout(new RandomController(), 0);
 	}
 
 }
