@@ -22,6 +22,7 @@ public class Breakout extends JFrame {
 
 	public static void main(String[] args) {
 		Breakout game = new Breakout(new RandomController(), 0);
+		//Teste
 	}
 
 }
