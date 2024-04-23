@@ -18,11 +18,13 @@ public class Breakout extends JFrame {
 		setResizable(false);
 		pack();
 		setVisible(true);
+		System.out.println();
 	}
 
 	public static void main(String[] args) {
-		Breakout game = new Breakout(new RandomController(), 0);
-		//Teste
+		//Breakout game = new Breakout(new RandomController(), 0);
+		Breakout game = new Breakout(new NeuralNetwork(), 0); //O classe que implementa o GameController é a NeuralNetwork
+		System.out.println(game);
 	}
 
 }
