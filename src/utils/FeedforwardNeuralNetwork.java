@@ -1,5 +1,7 @@
 package utils;
 
+import breakout.BreakoutBoard;
+
 public class FeedforwardNeuralNetwork implements GameController {
 
     private int inputDim; // Number of input nodes
@@ -52,7 +54,7 @@ public class FeedforwardNeuralNetwork implements GameController {
     }
 
     // Forward pass of the network
-    public double[] forward(double[] inputValues) {
+    public double[] forward(int[] currentState) {
         double[] hiddenLayer = new double[hiddenDim];
         double[] outputLayer = new double[outputDim];
 
@@ -60,7 +62,7 @@ public class FeedforwardNeuralNetwork implements GameController {
         for (int i = 0; i < hiddenDim; i++) {
             hiddenLayer[i] = 0;
             for (int j = 0; j < inputDim; j++) {
-                hiddenLayer[i] += inputValues[j] * inputHiddenWeights[j][i];
+                hiddenLayer[i] += currentState[j] * inputHiddenWeights[j][i];
             }
             hiddenLayer[i] += hiddenBiases[i];
             hiddenLayer[i] = sigmoid(hiddenLayer[i]);
@@ -118,7 +120,40 @@ public class FeedforwardNeuralNetwork implements GameController {
 
     @Override
     public int nextMove(int[] currentState) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'nextMove'");
+        // Implemente aqui a lógica para determinar o próximo movimento com base no estado atual do jogo
+        
+        // Por exemplo, você pode usar a passagem direta (forward pass) pela rede neural
+        double[] outputValues = forward(currentState);
+
+        // Em seguida, interprete os valores de saída para decidir o próximo movimento
+        // Por exemplo, escolha a ação com maior probabilidade
+        if (outputValues[0] > outputValues[1]) {
+            return BreakoutBoard.LEFT; // Mova para a esquerda
+        } else {
+            return BreakoutBoard.RIGHT; // Mova para a direita
+        }
+    }
+
+    
+    public static void main(String[] args) {
+        // Defina as dimensões da rede neural
+        int inputDim = 7; // Número de entradas
+        int hiddenDim = 3; // Número de neurônios na camada oculta
+        int outputDim = 2; // Número de saídas
+    
+        // Instancie a rede neural
+        FeedforwardNeuralNetwork neuralNetwork = new FeedforwardNeuralNetwork(inputDim, hiddenDim, outputDim);
+    
+        // Defina algumas entradas de teste
+        int [] inputValues = {20,45,23,12,65,36,17}; // Exemplo de valores de entrada
+    
+        // Faça uma passagem direta (forward pass) pela rede neural
+        double[] outputValues = neuralNetwork.forward(inputValues);
+    
+        // Imprima as saídas geradas
+        System.out.println("Saída da rede neural:");
+        for (double outputValue : outputValues) {
+            System.out.println(outputValue);
+        }
     }
 }
