@@ -47,7 +47,7 @@ public class FeedforwardNeuralNetwork implements GameController {
 
         // Initialize output biases with random values
         for (int i = 0; i < outputDim; i++) {
-            outputBiases[i] = Math.random() * 0.5;
+            outputBiases[i] = Math.random();
         }
     }
 
