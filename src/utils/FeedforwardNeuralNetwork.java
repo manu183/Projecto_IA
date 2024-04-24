@@ -7,10 +7,10 @@ public class FeedforwardNeuralNetwork implements GameController {
     private int inputDim; // Number of input nodes
     private int hiddenDim; // Number of hidden nodes  
     private int outputDim; // Number of output nodes
-    double[][] inputHiddenWeights; // Weights between input and hidden layer
     private double[] hiddenBiases; // Biases of hidden layer
-    private double[][] hiddenOutputWeights; // Weights between hidden and output layer
     private double[] outputBiases; // Biases of output layer
+    private double[][] inputHiddenWeights; // Weights between input and hidden layer
+    private double[][] hiddenOutputWeights; // Weights between hidden and output layer
 
 
     // Initialize the weights and biases of the network
@@ -19,6 +19,17 @@ public class FeedforwardNeuralNetwork implements GameController {
         this.hiddenDim = hiddenDim;
         this.outputDim = outputDim;
         initializeParameters(); 
+    }
+
+    public FeedforwardNeuralNetwork(double[] hiddenBiases, double[] outputBiases, double[][] inputHiddenWeights, double[][] hiddenOutputWeights) {
+        this.inputDim = inputHiddenWeights.length;
+        this.hiddenDim = hiddenOutputWeights.length;
+        this.outputDim = hiddenOutputWeights[0].length;
+        this.hiddenBiases = hiddenBiases;
+        this.outputBiases = outputBiases;
+        this.inputHiddenWeights = inputHiddenWeights;
+        this.hiddenOutputWeights = hiddenOutputWeights;
+
     }
 
     // Initialize the weights and biases of the network with random values
@@ -142,22 +153,29 @@ public class FeedforwardNeuralNetwork implements GameController {
         int outputDim = 2; // Número de saídas
     
         // Instancie a rede neural
-        FeedforwardNeuralNetwork neuralNetwork = new FeedforwardNeuralNetwork(inputDim, hiddenDim, outputDim);
+        FeedforwardNeuralNetwork neuralNetwork1 = new FeedforwardNeuralNetwork(inputDim, hiddenDim, outputDim);
+        // Create an object using the second constructor
+        FeedforwardNeuralNetwork neuralNetwork2 = new FeedforwardNeuralNetwork(new double[]{1,2,3}, new double[]{5}, new double[][]{{1,2,4}}, new double[][]{{1}});
     
         // Defina algumas entradas de teste
         int [] inputValues = {12,34,56,78,91,23,45}; // Exemplo de valores de entrada
 
         // Faça uma passagem direta (forward pass) pela rede neural
-        double[] outputValues = neuralNetwork.forward(inputValues);
+        double[] outputValues = neuralNetwork1.forward(inputValues);
     
         // Imprima as saídas geradas
         System.out.println("Saída da rede neural:");
         for (double outputValue : outputValues) {
             System.out.println(outputValue);
         }
+
+        // Faça uma passagem direta (forward pass) pela rede neural2
+        double[] outputValues2 = neuralNetwork2.forward(inputValues);
+    
+        // Imprima as saídas geradas
+        System.out.println("Saída da rede neural2:");
+        for (double outputValue : outputValues2) {
+            System.out.println(outputValue);
+        }
     }
-    
-    
-
-
 }

@@ -50,9 +50,9 @@ public class GeneticAlgorithm {
         FeedforwardNeuralNetwork best = population[(int) (Math.random()*POPULATION_SIZE)];
         for (int i = 0; i < k_tournament; i++) {
             FeedforwardNeuralNetwork candidate = population[(int) (Math.random()*POPULATION_SIZE)];
-            if (candidate.getFitness() > best.getFitness()) {
+            /*if (candidate.getFitness() > best.getFitness()) {
                 best = candidate;
-            }
+            }*/
         }
         return best;
     }
