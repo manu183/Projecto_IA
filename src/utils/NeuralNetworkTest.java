@@ -1,6 +1,7 @@
 package utils;
 
 import breakout.BreakoutBoard;
+import breakout.Breakout;
 
 public class NeuralNetworkTest {
 
@@ -72,5 +73,9 @@ public class NeuralNetworkTest {
             System.out.println("Fitness of neural network 2 in simulation " + i + ": " + (int)fitness); // Cast fitness to int
         }
 
+        
+
     }
+
+
 }

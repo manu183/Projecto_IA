@@ -13,11 +13,13 @@ public class FeedforwardNeuralNetwork implements GameController {
     private double[][] hiddenOutputWeights; // Weights between hidden and output layer
 
 
+
     // Initialize the weights and biases of the network
     public FeedforwardNeuralNetwork(int inputDim, int hiddenDim, int outputDim) {
         this.inputDim = inputDim;
         this.hiddenDim = hiddenDim;
         this.outputDim = outputDim;
+
         initializeParameters(); 
     }
 
@@ -129,6 +131,38 @@ public class FeedforwardNeuralNetwork implements GameController {
         return values;
     }
 
+    // Getters e setters
+
+    public double[] getHiddenBiases() { //Obter os vieses da camada oculta
+        return hiddenBiases;
+    }
+    public void setHiddenBiases(double[] hiddenBiases) { //Definir os vieses da camada oculta
+        this.hiddenBiases = hiddenBiases;
+    }
+
+    public double[] getOutputBiases() { //Obter os vieses da camada de saída
+        return outputBiases;
+    }
+    public void setOutputBiases(double[] outputBiases) { //Definir os vieses da camada de saída
+        this.outputBiases = outputBiases;
+    }
+
+    public double[][] getInputHiddenWeights() { //Obter a matriz de pesos entre a camada de entrada e a camada oculta
+        return inputHiddenWeights;
+    }
+
+    public void setInputHiddenWeights(double[][] inputHiddenWeights) { //Definir a matriz de pesos entre a camada de entrada e a camada oculta
+        this.inputHiddenWeights = inputHiddenWeights;
+    }
+
+    public double[][] getHiddenOutputWeights() { //Obter a matriz de pesos entre a camada oculta e a camada de saída
+        return hiddenOutputWeights;
+    }
+
+    public void setHiddenOutputWeights(double[][] hiddenOutputWeights) { //Definir a matriz de pesos entre a camada oculta e a camada de saída
+        this.hiddenOutputWeights = hiddenOutputWeights;
+    }
+
     @Override
     public int nextMove(int[] currentState) {
         // Implemente aqui a lógica para determinar o próximo movimento com base no estado atual do jogo
@@ -143,6 +177,30 @@ public class FeedforwardNeuralNetwork implements GameController {
         } else {
             return BreakoutBoard.RIGHT; // Mova para a direita
         }
+    }
+
+    @Override
+    public String toString(){
+        String str = "";
+        str += "Hidden Biases:\n";
+        for(int i=0;i<hiddenBiases.length;i++)
+            str += hiddenBiases[i] + " ";
+        str += "\nOutput Biases:\n";
+        for(int i=0;i<outputBiases.length;i++)
+            str += outputBiases[i] + " ";
+        str += "\nInput Hidden Weights:\n";
+        for(int i=0;i<inputHiddenWeights.length;i++){
+            for(int j=0;j<inputHiddenWeights[i].length;j++)
+                str += inputHiddenWeights[i][j] + " ";
+            str += "\n";
+        }
+        str += "Hidden Output Weights:\n";
+        for(int i=0;i<hiddenOutputWeights.length;i++){
+            for(int j=0;j<hiddenOutputWeights[i].length;j++)
+                str += hiddenOutputWeights[i][j] + " ";
+            str += "\n";
+        }
+        return str;
     }
 
     // Exemplo de uso da rede neural

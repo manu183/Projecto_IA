@@ -24,7 +24,7 @@ public class Breakout extends JFrame {
 	public static void main(String[] args) {
 		//Breakout game = new Breakout(new RandomController(), 0);
 		Breakout game = new Breakout(new RandomController(), 0); //O classe que implementa o GameController é a NeuralNetwork
-		System.out.println(game);
+		
 	}
 
 }
