@@ -19,11 +19,11 @@ public class GeneticAlgorithm {
     
     private final int POPULATION_SIZE = 100;
     //private final int NUM_GENERATIONS = 1000;
-    private final int NUM_GENERATIONS = 1;
+    private final int NUM_GENERATIONS = 1000;
     private final double MUTATION_RATE = 0.05;
     private final double SELECTION_PERCENTAGE = 0.2;
     private final int k_tournament = 2;
-    private final int FITNESS_GOAL=20000; //O número de fitness que se pretende alcançar
+    private final int FITNESS_GOAL=200000; //O número de fitness que se pretende alcançar
 
     private final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
     private final int HIDDEN_DIM = 10; // Número de neurônios na camada oculta
@@ -135,12 +135,14 @@ public class GeneticAlgorithm {
     private void runGeneration() { //Executar uma geração e guardar os fitnesses de cada indivíduo
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
+            currentBestFitness = 0;// A cada geração currentBestFitness é reinicializado a 0
             BreakoutBoard game = new BreakoutBoard(population[i], false, 2);
             game.runSimulation();
             fitnesses[i] = game.getFitness();
-            if(fitnesses[i]>currentBestFitness) {
+            if(fitnesses[i]>currentBestFitness) { // Guarda o eu fitness até ao moment
                 currentBestFitness = fitnesses[i];
             }
+            //System.out.println("Fitness: " + fitnesses[i]);
         }
 
     }
@@ -150,9 +152,9 @@ public class GeneticAlgorithm {
         if(population.length == 0) {
             generatePopulation();
         }
-        while (actualGeneration<NUM_GENERATIONS && currentBestFitness < FITNESS_GOAL) {//Para cada geração
+        while (actualGeneration < NUM_GENERATIONS && currentBestFitness < FITNESS_GOAL) {//Para cada geração
+
             runGeneration();
-            
             FeedforwardNeuralNetwork[] newgeneration = new FeedforwardNeuralNetwork[POPULATION_SIZE-(int)(POPULATION_SIZE*SELECTION_PERCENTAGE)];
             FeedforwardNeuralNetwork[] mantainGeneration = selection();
             for (int j = 0; j < newgeneration.length; j++) {//Para cada indíviduo que será gerado
@@ -170,16 +172,17 @@ public class GeneticAlgorithm {
             //Mutação
             for(int m=0;m<(int)(POPULATION_SIZE*MUTATION_RATE);m++) {//Para cada indivíduo que será mutado
                 FeedforwardNeuralNetwork actual = population[m];
-                System.out.println(m);
+               // System.out.println(m);
                 mutate(actual);
                 population[m] = actual;
             }
-
+            System.out.println("Current best fitness: " + currentBestFitness + " Generation: " + (int)(actualGeneration+1));
             actualGeneration++;
         }
         //Escrever o melhor indivíduo num ficheiro
         FeedforwardNeuralNetwork best = findFNNOfFitness(currentBestFitness);
         Utils.printToFile("best.txt", best);
+        System.out.println(actualGeneration + " generations runned");
     }
 
     public static void main(String[] args) {
