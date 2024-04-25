@@ -3,6 +3,7 @@ package breakout;
 import javax.swing.JFrame;
 
 import pacman.RandomController;
+import utils.FeedforwardNeuralNetwork;
 import utils.GameController;
 
 public class Breakout extends JFrame {
@@ -23,8 +24,8 @@ public class Breakout extends JFrame {
 
 	public static void main(String[] args) {
 		//Breakout game = new Breakout(new RandomController(), 0);
-		Breakout game = new Breakout(new RandomController(), 0); //O classe que implementa o GameController é a NeuralNetwork
-		
+		//Breakout game = new Breakout(new RandomController(), 0); //O classe que implementa o GameController é a NeuralNetwork
+		Breakout nnGame = new Breakout(new FeedforwardNeuralNetwork(7, 3, 2), 0);
 	}
 
 }

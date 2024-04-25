@@ -31,7 +31,10 @@ public class FeedforwardNeuralNetwork implements GameController {
         this.outputBiases = outputBiases;
         this.inputHiddenWeights = inputHiddenWeights;
         this.hiddenOutputWeights = hiddenOutputWeights;
+    }
 
+    public FeedforwardNeuralNetwork FeedforwardNeuralNetwork(String filename) {
+        return Utils.fileToNeuralNetwork(filename);
     }
 
     // Initialize the weights and biases of the network with random values
