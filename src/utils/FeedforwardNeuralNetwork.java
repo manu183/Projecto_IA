@@ -109,7 +109,7 @@ public class FeedforwardNeuralNetwork implements GameController {
                 hiddenLayer[i] += currentState[j] * inputHiddenWeights[j][i];
             }
             hiddenLayer[i] += hiddenBiases[i];
-            //hiddenLayer[i] = sigmoid(hiddenLayer[i]);
+            hiddenLayer[i] = sigmoid(hiddenLayer[i]);
         }
 
         // Calculate activations for output layer

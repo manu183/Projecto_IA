@@ -19,7 +19,7 @@ class Population {
 
     }
 
-    public FeedforwardNeuralNetwork getFNNAtIndex(int index) {
+    public FeedforwardNeuralNetwork getFNNAtIndex(int index) { // Retorna o FNN num certo índice
         return getFNN()[index];
     }
 
