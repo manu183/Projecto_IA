@@ -1,9 +1,7 @@
 package utils;
 
-import java.util.Arrays;
 import java.util.Random;
 import breakout.BreakoutBoard;
-import java.util.LinkedHashMap;
 
 public class GeneticAlgorithm {
 
@@ -32,7 +30,9 @@ public class GeneticAlgorithm {
         }
     }
 
-    private Population createNewPopulation(Population generatedPopulation, Population mantainedPopulation) {
+
+    // Criar a nova população com base na população gerada e na população mantida
+    private Population createNewPopulation(Population generatedPopulation, Population mantainedPopulation) { 
         Population newPopulation = new Population(POPULATION_SIZE);
         FeedforwardNeuralNetwork[] generated = generatedPopulation.getFNN();
         FeedforwardNeuralNetwork[] mantained = mantainedPopulation.getFNN();
@@ -122,11 +122,8 @@ public class GeneticAlgorithm {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             Random random = new Random();
             int randomSeed = random.nextInt(50);
-            //BreakoutBoard game = new BreakoutBoard(population[i], false, randomSeed);
-            //System.out.println("População no indice"+ i+ population.getFNNAtIndex(i));
             BreakoutBoard game = new BreakoutBoard(population.getFNNAtIndex(i), false, randomSeed);
             game.runSimulation();
-            //fitnesses[i] = game.getFitness();
             population.updateFitnessAtIndex(game.getFitness(), i);
         }
         System.out.println(
@@ -135,29 +132,27 @@ public class GeneticAlgorithm {
     }
 
     public void run() { // Correr o algoritmo genético
-        int actualGeneration = 0;
+        int actualGeneration = 0; //indice de geração atual
 
         while (actualGeneration < NUM_GENERATIONS && population.actualBestFitness() < FITNESS_GOAL) {// Para cada geração
 
-            runGeneration(actualGeneration);
+            runGeneration(actualGeneration); // Executar uma geração, calculando os fitnesses de cada indivíduo
             int newPopulationSize = (int) (POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
             Population newPopulation = new Population(newPopulationSize);
             Population mantainedPopulation = selection();
             for (int j = 0; j < newPopulationSize; j++) {// Para cada indíviduo que será gerado
-                FeedforwardNeuralNetwork parent1 = selectParent();
-                FeedforwardNeuralNetwork parent2 = selectParent();
-                FeedforwardNeuralNetwork child = crossover(parent1, parent2);
+                FeedforwardNeuralNetwork parent1 = selectParent(); // Selecionar os pai 1
+                FeedforwardNeuralNetwork parent2 = selectParent(); // Selecionar os pai 2
+                FeedforwardNeuralNetwork child = crossover(parent1, parent2); // Cruzar os pais para gerar um filho
                 newPopulation.add(child, -1); // Adicionar o indivíduo gerado à nova população que tem por defeito o fitness -1 porque ainda não foi calculado
             }
-            this.population=createNewPopulation(newPopulation, mantainedPopulation); // Criar a nova população com base na nova população
-                                                                   // e na população mantida
+            this.population=createNewPopulation(newPopulation, mantainedPopulation); // Criar a nova população com base na nova população e na população mantida
 
             this.population = mutatedPopulation(); // Aplicar a mutação à população
             
             actualGeneration++;
         }
         // Escrever o melhor indivíduo num ficheiro
-        //FeedforwardNeuralNetwork best = findFNNOfFitness(currentBestFitness);
         FeedforwardNeuralNetwork best = population.sortedFNNByFitness()[0];
         Utils.printToFile("best.txt", best);
         System.out.println(actualGeneration + " generations runned");
@@ -167,9 +162,5 @@ public class GeneticAlgorithm {
         System.out.println("Testing Genetic Algorithm");
         GeneticAlgorithm ga = new GeneticAlgorithm();
         ga.run();
-        // BreakoutBoard randomGame = new BreakoutBoard(new RandomController(), false,
-        // 2);
-        // randomGame.runSimulation();
-        // System.out.println("Random game fitness: " + randomGame.getFitness());
     }
 }

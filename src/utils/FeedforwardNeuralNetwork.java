@@ -1,7 +1,5 @@
 package utils;
 
-import javax.print.DocFlavor.INPUT_STREAM;
-
 import breakout.BreakoutBoard;
 
 public class FeedforwardNeuralNetwork implements GameController {
@@ -193,31 +191,6 @@ public class FeedforwardNeuralNetwork implements GameController {
         }
         return res;
     }
-    /*
-    @Override
-    public String toString(){
-        String str = "";
-        str += "Hidden Biases:\n";
-        for(int i=0;i<hiddenBiases.length;i++)
-            str += hiddenBiases[i] + " ";
-        str += "\nOutput Biases:\n";
-        for(int i=0;i<outputBiases.length;i++)
-            str += outputBiases[i] + " ";
-        str += "\nInput Hidden Weights:\n";
-        for(int i=0;i<inputHiddenWeights.length;i++){
-            for(int j=0;j<inputHiddenWeights[i].length;j++)
-                str += inputHiddenWeights[i][j] + " ";
-            str += "\n";
-        }
-        str += "Hidden Output Weights:\n";
-        for(int i=0;i<hiddenOutputWeights.length;i++){
-            for(int j=0;j<hiddenOutputWeights[i].length;j++)
-                str += hiddenOutputWeights[i][j] + " ";
-            str += "\n";
-        }
-        return str;
-    }
-    */
 
     // Exemplo de uso da rede neural
     public static void main(String[] args) {

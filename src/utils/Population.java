@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 class Population {
     private final int maxPopulationSize;
     private LinkedHashMap<FeedforwardNeuralNetwork, Integer> population;
+    // Foi utilizado LinkedHashMap para manter a ordem de inserção dos elementos
 
     public Population(int maxPopulationSize) {
         this.maxPopulationSize = maxPopulationSize;
@@ -86,7 +87,7 @@ class Population {
         FeedforwardNeuralNetwork[] feedforwardNeuralNetworks = new FeedforwardNeuralNetwork[maxPopulationSize];
         int[] sortedFitnesses = sortedFitnesses();
         int currentIndex = 0; // Índice atual para adicionar ao array
-        
+
         for (int i = 0; i < sortedFitnesses.length; i++) {
             for (FeedforwardNeuralNetwork nn : population.keySet()) {
                 if (population.get(nn) == sortedFitnesses[i]) {
@@ -99,7 +100,7 @@ class Population {
         }
         return feedforwardNeuralNetworks;
     }
-    
+
     private boolean contains(FeedforwardNeuralNetwork[] pop, FeedforwardNeuralNetwork nn) {
         for (FeedforwardNeuralNetwork actual : pop) {
             if (actual != null && actual.equals(nn)) { // Verifica-se se o elemento não é nulo antes de comparar
