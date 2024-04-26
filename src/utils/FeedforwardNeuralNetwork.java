@@ -37,6 +37,34 @@ public class FeedforwardNeuralNetwork implements GameController {
         return Utils.fileToNeuralNetwork(filename);
     }
 
+    public FeedforwardNeuralNetwork(int inputDim, int hiddenDim, int outputDim, double[] values) {
+		this(inputDim, hiddenDim, outputDim);
+		if (values.length != (inputDim * hiddenDim + hiddenDim + hiddenDim * outputDim + outputDim)) {
+			throw new IllegalArgumentException("The number of values is not correct");
+		}
+		int aux = 0;
+		for (int i = 0; i < inputDim; i++) {
+			for (int j = 0; j < hiddenDim; j++) {
+				inputHiddenWeights[i][j] = values[aux];
+				aux++;
+			}
+		}
+		for (int i = 0; i < hiddenDim; i++) {
+			hiddenBiases[i] = values[aux];
+			aux++;
+		}
+		for (int i = 0; i < hiddenDim; i++) {
+			for (int j = 0; j < outputDim; j++) {
+				hiddenOutputWeights[i][j] = values[aux];
+				aux++;
+			}
+		}
+		for (int i = 0; i < outputDim; i++) {
+			outputBiases[i] = values[aux];
+			aux++;
+		}
+	}
+
     // Initialize the weights and biases of the network with random values
     public void initializeParameters() {
         inputHiddenWeights = new double[inputDim][hiddenDim];
@@ -81,7 +109,7 @@ public class FeedforwardNeuralNetwork implements GameController {
                 hiddenLayer[i] += currentState[j] * inputHiddenWeights[j][i];
             }
             hiddenLayer[i] += hiddenBiases[i];
-            hiddenLayer[i] = sigmoid(hiddenLayer[i]);
+            //hiddenLayer[i] = sigmoid(hiddenLayer[i]);
         }
 
         // Calculate activations for output layer
@@ -135,6 +163,7 @@ public class FeedforwardNeuralNetwork implements GameController {
     }
 
     // Getters e setters
+    /*
 
     public double[] getHiddenBiases() { //Obter os vieses da camada oculta
         return hiddenBiases;
@@ -164,7 +193,7 @@ public class FeedforwardNeuralNetwork implements GameController {
 
     public void setHiddenOutputWeights(double[][] hiddenOutputWeights) { //Definir a matriz de pesos entre a camada oculta e a camada de saída
         this.hiddenOutputWeights = hiddenOutputWeights;
-    }
+    }*/
 
     @Override
     public int nextMove(int[] currentState) {

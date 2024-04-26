@@ -3,6 +3,8 @@ package utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 import java.io.FileWriter;
 
@@ -58,11 +60,39 @@ public class Utils {
         return nn;
     }
 
+    public static int[] generateNDifferentsNumbers(int numbersToGenerate, int max){
+        Random random = new Random();
+        int[] numbers = new int[numbersToGenerate];
+        for(int i = 0; i < numbersToGenerate; i++){
+            int generatedNumber = random.nextInt(max);
+            while(contains(numbers, generatedNumber)){
+                generatedNumber = random.nextInt(max);
+            }
+            numbers[i] = generatedNumber;
+            
+        }
+        return numbers;
+    }
+
+    private static boolean contains(int[] numbers, int number){
+        for(int i = 0; i < numbers.length; i++){
+            if(numbers[i] == number){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         //FeedforwardNeuralNetwork nn = new FeedforwardNeuralNetwork(7,10,2);
         //printToFile("neuralnetwork.txt", nn);
         //FeedforwardNeuralNetwork nn2 = fileToNeuralNetwork("best.txt");
         //System.out.println(nn2.toString());
+
+        int[] numbers = generateNDifferentsNumbers(10, 20);
+        for(int i = 0; i < numbers.length; i++){
+            System.out.println(numbers[i]);
+        }
     }
 
 }
