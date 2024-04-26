@@ -1,5 +1,7 @@
 package utils;
 
+import javax.print.DocFlavor.INPUT_STREAM;
+
 import breakout.BreakoutBoard;
 
 public class FeedforwardNeuralNetwork implements GameController {
@@ -33,9 +35,7 @@ public class FeedforwardNeuralNetwork implements GameController {
         this.hiddenOutputWeights = hiddenOutputWeights;
     }
 
-    public FeedforwardNeuralNetwork FeedforwardNeuralNetwork(String filename) {
-        return Utils.fileToNeuralNetwork(filename);
-    }
+    
 
     public FeedforwardNeuralNetwork(int inputDim, int hiddenDim, int outputDim, double[] values) {
 		this(inputDim, hiddenDim, outputDim);
@@ -64,6 +64,12 @@ public class FeedforwardNeuralNetwork implements GameController {
 			aux++;
 		}
 	}
+
+    // Create a FeedforwardNeuralNetwork object from a file
+    public static FeedforwardNeuralNetwork FNNfromFile(int inputDim, int hiddenDim, int outputDim,String filename) {
+        double[] values = Utils.readFromFile(filename);
+        return new FeedforwardNeuralNetwork(inputDim,hiddenDim,outputDim,values);
+    }
 
     // Initialize the weights and biases of the network with random values
     public void initializeParameters() {
@@ -162,38 +168,6 @@ public class FeedforwardNeuralNetwork implements GameController {
         return values;
     }
 
-    // Getters e setters
-    /*
-
-    public double[] getHiddenBiases() { //Obter os vieses da camada oculta
-        return hiddenBiases;
-    }
-    public void setHiddenBiases(double[] hiddenBiases) { //Definir os vieses da camada oculta
-        this.hiddenBiases = hiddenBiases;
-    }
-
-    public double[] getOutputBiases() { //Obter os vieses da camada de saída
-        return outputBiases;
-    }
-    public void setOutputBiases(double[] outputBiases) { //Definir os vieses da camada de saída
-        this.outputBiases = outputBiases;
-    }
-
-    public double[][] getInputHiddenWeights() { //Obter a matriz de pesos entre a camada de entrada e a camada oculta
-        return inputHiddenWeights;
-    }
-
-    public void setInputHiddenWeights(double[][] inputHiddenWeights) { //Definir a matriz de pesos entre a camada de entrada e a camada oculta
-        this.inputHiddenWeights = inputHiddenWeights;
-    }
-
-    public double[][] getHiddenOutputWeights() { //Obter a matriz de pesos entre a camada oculta e a camada de saída
-        return hiddenOutputWeights;
-    }
-
-    public void setHiddenOutputWeights(double[][] hiddenOutputWeights) { //Definir a matriz de pesos entre a camada oculta e a camada de saída
-        this.hiddenOutputWeights = hiddenOutputWeights;
-    }*/
 
     @Override
     public int nextMove(int[] currentState) {
@@ -211,6 +185,15 @@ public class FeedforwardNeuralNetwork implements GameController {
         }
     }
 
+    @Override
+    public String toString(){
+        String res="";
+        for(int i=0; i<getNeuralNetwork().length; i++){
+            res+=getNeuralNetwork()[i]+" ";
+        }
+        return res;
+    }
+    /*
     @Override
     public String toString(){
         String str = "";
@@ -234,6 +217,7 @@ public class FeedforwardNeuralNetwork implements GameController {
         }
         return str;
     }
+    */
 
     // Exemplo de uso da rede neural
     public static void main(String[] args) {
@@ -252,7 +236,7 @@ public class FeedforwardNeuralNetwork implements GameController {
 
         // Faça uma passagem direta (forward pass) pela rede neural
         double[] outputValues = neuralNetwork1.forward(inputValues);
-    
+    /* 
         // Imprima as saídas geradas
         System.out.println("Saída da rede neural:");
         for (double outputValue : outputValues) {
@@ -267,5 +251,11 @@ public class FeedforwardNeuralNetwork implements GameController {
         for (double outputValue : outputValues2) {
             System.out.println(outputValue);
         }
+    */
+        //System.out.println(neuralNetwork1.toString());
+        //System.out.println(neuralNetwork1.getNeuralNetwork().length);
+
+        //FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork("best.txt");
+        //System.out.println(nn.toString());
     }
 }

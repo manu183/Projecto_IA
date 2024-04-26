@@ -3,7 +3,9 @@ package utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.FileWriter;
@@ -24,29 +26,23 @@ public class Utils {
             e.printStackTrace();
         }
     }
-    /**
-     * @param filename
-     * @return
-     */
-    public static FeedforwardNeuralNetwork fileToNeuralNetwork(String filename) {
-        FeedforwardNeuralNetwork nn = null;
-        double[] hiddenBiases = null;
-        double[] outputBiases = null;
-        double[][] inputHiddenWeights = null;
-        double[][] hiddenOutputWeights = null;
 
+    public static double[] readFromFile(String filename) {
+
+        List<Double> nnData = new ArrayList<Double>();
         try {
             File file = new File(filename);
             Scanner scanner = new Scanner(file);
 
             while (scanner.hasNextLine()) {
                 String linha = scanner.nextLine();
-                //scanner.nextLine();
-                System.out.println(linha);
-                
+                String[] tokens = linha.split(" ");
 
-                //TODO - Implementar a leitura dos dados do arquivo
-                
+                for (String token : tokens) {
+                    nnData.add(Double.parseDouble(token));
+                }
+
+                // TODO - Implementar a leitura dos dados do arquivo
 
             }
             scanner.close();
@@ -54,45 +50,34 @@ public class Utils {
             System.out.println("Ocorreu um erro ao gravar o arquivo.");
             e.printStackTrace();
         }
-       // nn=new FeedforwardNeuralNetwork(hiddenBiases, outputBiases, inputHiddenWeights, hiddenOutputWeights);
-        if(nn!=null)
-            System.out.println("Dados lidos com sucesso de " + filename);
-        return nn;
+        double[] values = new double[nnData.size()];
+        for (int i = 0; i < nnData.size(); i++) {
+            values[i] = nnData.get(i);
+        }
+
+        return values;
     }
 
-    public static int[] generateNDifferentsNumbers(int numbersToGenerate, int max){
+    public static int[] generateNDifferentsNumbers(int numbersToGenerate, int max) {
         Random random = new Random();
         int[] numbers = new int[numbersToGenerate];
-        for(int i = 0; i < numbersToGenerate; i++){
+        for (int i = 0; i < numbersToGenerate; i++) {
             int generatedNumber = random.nextInt(max);
-            while(contains(numbers, generatedNumber)){
+            while (contains(numbers, generatedNumber)) {
                 generatedNumber = random.nextInt(max);
             }
             numbers[i] = generatedNumber;
-            
+
         }
         return numbers;
     }
 
-    private static boolean contains(int[] numbers, int number){
-        for(int i = 0; i < numbers.length; i++){
-            if(numbers[i] == number){
+    private static boolean contains(int[] numbers, int number) {
+        for (int i = 0; i < numbers.length; i++) {
+            if (numbers[i] == number) {
                 return true;
             }
         }
         return false;
     }
-
-    public static void main(String[] args) {
-        //FeedforwardNeuralNetwork nn = new FeedforwardNeuralNetwork(7,10,2);
-        //printToFile("neuralnetwork.txt", nn);
-        //FeedforwardNeuralNetwork nn2 = fileToNeuralNetwork("best.txt");
-        //System.out.println(nn2.toString());
-
-        int[] numbers = generateNDifferentsNumbers(10, 20);
-        for(int i = 0; i < numbers.length; i++){
-            System.out.println(numbers[i]);
-        }
-    }
-
 }

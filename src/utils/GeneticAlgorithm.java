@@ -9,7 +9,7 @@ public class GeneticAlgorithm {
 
     private final int POPULATION_SIZE = 1000;
     // private final int NUM_GENERATIONS = 1000;
-    private final int NUM_GENERATIONS = 1000;
+    private final int NUM_GENERATIONS = 2;
     private final double MUTATION_RATE = 0.05;
     private final double SELECTION_PERCENTAGE = 0.2;
     private final int k_tournament = 4;
