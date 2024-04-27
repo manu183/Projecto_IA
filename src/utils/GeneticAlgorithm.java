@@ -12,7 +12,7 @@ public class GeneticAlgorithm {
 
     private final int POPULATION_SIZE = 100;
     // private final int NUM_GENERATIONS = 1000;
-    private final int NUM_GENERATIONS = 100;
+    private final int NUM_GENERATIONS = 20000;
     private final double MUTATION_RATE = 0.05;
     private final double SELECTION_PERCENTAGE = 0.1;
     private final int k_tournament = 4;
@@ -25,6 +25,8 @@ public class GeneticAlgorithm {
     private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos
 
     private int bestFitness = 0;
+
+    public static final int SEED =1;
     
 
     public GeneticAlgorithm() {
@@ -133,13 +135,9 @@ public class GeneticAlgorithm {
 
 
     private void runGeneration(int generationNum) { // Executar uma geração e guardar os fitnesses de cada indivíduo
-
-        Random random = new Random();
-        int randomSeed = random.nextInt(1000);
-        int  seed=randomSeed;
         int genBestFitness = 0;
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            BreakoutBoard game = new BreakoutBoard(population[i].getFNN(), false, seed);
+            BreakoutBoard game = new BreakoutBoard(population[i].getFNN(), false, SEED);
             game.runSimulation();
             int fitness = game.getFitness();
             population[i].setFitness(fitness);
@@ -148,7 +146,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println(
-            "Current best fitness: " + genBestFitness + " Generation: "+ generationNum + " Seed: " + seed);
+            "Current best fitness: " + genBestFitness + " Generation: "+ generationNum + " Seed: " + SEED);
 
         if(genBestFitness>bestFitness){ // Atualizar o melhor fitness se o fitness da geração atual for melhor
             bestFitness = genBestFitness;
@@ -182,7 +180,7 @@ public class GeneticAlgorithm {
         FeedforwardNeuralNetwork best = population[POPULATION_SIZE-1].getFNN();// O melhor indivíduo é o último da população ordenada
         Utils.printToFile("best.txt", best);
         System.out.println(actualGeneration + " generations runned");
-        Breakout game = new Breakout(best, 40);
+        Breakout game = new Breakout(best, SEED);
     }
 
     public static void main(String[] args) {
