@@ -173,14 +173,18 @@ public class FeedforwardNeuralNetwork implements GameController {
 
         // Por exemplo, você pode usar a passagem direta (forward pass) pela rede neural
         double[] outputValues = forward(currentState);
+       // System.out.println("Output values: "+outputValues[0]+" "+outputValues[1]);
 
         // Em seguida, interprete os valores de saída para decidir o próximo movimento
         // Por exemplo, escolha a ação com maior probabilidade
         if (outputValues[0] > outputValues[1]) {
             return BreakoutBoard.LEFT; // Mova para a esquerda
-        } else {
+        }else if (outputValues[0] < outputValues[1]) {
             return BreakoutBoard.RIGHT; // Mova para a direita
         }
+        return 0; // Pare
+            
+        //return BreakoutBoard.RIGHT; // Mova para a direita
     }
 
     @Override

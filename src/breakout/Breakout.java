@@ -23,10 +23,11 @@ public class Breakout extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		//Breakout game = new Breakout(new RandomController(), 0);
+		//Breakout game = new Breakout(new RandomController(), 999999999);
 		//Breakout game = new Breakout(new RandomController(), 0); //O classe que implementa o GameController é a NeuralNetwork
-		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(7, 10, 2, "best.txt");
+		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(7, 7, 2, "best.txt");
 		Breakout nnGame = new Breakout(nn, 40);
+		//Breakout game = new Breakout(new FeedforwardNeuralNetwork(7, 5, 2), 0);
 	}
 
 }

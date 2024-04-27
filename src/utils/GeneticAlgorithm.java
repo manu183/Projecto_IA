@@ -1,20 +1,22 @@
 package utils;
 
 import java.util.Random;
+
+import breakout.Breakout;
 import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 1000;
+    private final int POPULATION_SIZE = 500;
     // private final int NUM_GENERATIONS = 1000;
-    private final int NUM_GENERATIONS = 2;
-    private final double MUTATION_RATE = 0.05;
-    private final double SELECTION_PERCENTAGE = 0.2;
-    private final int k_tournament = 4;
+    private final int NUM_GENERATIONS = 100;
+    private final double MUTATION_RATE = 0.1;
+    private final double SELECTION_PERCENTAGE = 0.5;
+    private final int k_tournament = 10;
     private final int FITNESS_GOAL = 999999999; // O número de fitness que se pretende alcançar
 
     private final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    private final int HIDDEN_DIM = 10; // Número de neurônios na camada oculta
+    private final int HIDDEN_DIM = 7; // Número de neurônios na camada oculta
     private final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
 
     private Population population = new Population(POPULATION_SIZE); // População de indivíduos
@@ -117,17 +119,19 @@ public class GeneticAlgorithm {
         return mutatedPopulation;
     }
 
+
     private void runGeneration(int generationNum) { // Executar uma geração e guardar os fitnesses de cada indivíduo
 
+        Random random = new Random();
+        int randomSeed = random.nextInt(1000);
+        int  seed=40;
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            Random random = new Random();
-            int randomSeed = random.nextInt(50);
-            BreakoutBoard game = new BreakoutBoard(population.getFNNAtIndex(i), false, randomSeed);
+            BreakoutBoard game = new BreakoutBoard(population.getFNNAtIndex(i), false, seed);
             game.runSimulation();
             population.updateFitnessAtIndex(game.getFitness(), i);
         }
         System.out.println(
-            "Current best fitness: " + population.actualBestFitness() + " Generation: "+ generationNum);
+            "Current best fitness: " + population.actualBestFitness() + " Generation: "+ generationNum + " Seed: " + seed);
 
     }
 
@@ -141,8 +145,10 @@ public class GeneticAlgorithm {
             Population newPopulation = new Population(newPopulationSize);
             Population mantainedPopulation = selection();
             for (int j = 0; j < newPopulationSize; j++) {// Para cada indíviduo que será gerado
-                FeedforwardNeuralNetwork parent1 = selectParent(); // Selecionar os pai 1
-                FeedforwardNeuralNetwork parent2 = selectParent(); // Selecionar os pai 2
+                //FeedforwardNeuralNetwork parent1 = selectParent(); // Selecionar os pai 1
+                FeedforwardNeuralNetwork parent1 = population.sortedFNNByFitness()[0];
+                //FeedforwardNeuralNetwork parent2 = selectParent(); // Selecionar os pai 2
+                FeedforwardNeuralNetwork parent2 = population.sortedFNNByFitness()[1];
                 FeedforwardNeuralNetwork child = crossover(parent1, parent2); // Cruzar os pais para gerar um filho
                 newPopulation.add(child, -1); // Adicionar o indivíduo gerado à nova população que tem por defeito o fitness -1 porque ainda não foi calculado
             }
@@ -156,6 +162,7 @@ public class GeneticAlgorithm {
         FeedforwardNeuralNetwork best = population.sortedFNNByFitness()[0];
         Utils.printToFile("best.txt", best);
         System.out.println(actualGeneration + " generations runned");
+        Breakout game = new Breakout(best, 40);
     }
 
     public static void main(String[] args) {
