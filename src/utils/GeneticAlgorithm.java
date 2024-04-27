@@ -10,17 +10,17 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 100;
+    private final int POPULATION_SIZE = 400;
     // private final int NUM_GENERATIONS = 1000;
-    private final int NUM_GENERATIONS = 20000;
-    private final double MUTATION_RATE = 0.05;
-    private final double SELECTION_PERCENTAGE = 0.1;
+    private final int NUM_GENERATIONS = 5000;
+    private final double MUTATION_RATE = 0.2;
+    private final double SELECTION_PERCENTAGE = 0.4;
     private final int k_tournament = 4;
     private final int FITNESS_GOAL = 999999999; // O número de fitness que se pretende alcançar
 
-    private final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    private final int HIDDEN_DIM = 7; // Número de neurônios na camada oculta
-    private final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
+    public static final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
+    public static final int HIDDEN_DIM = 7; // Número de neurônios na camada oculta
+    public static final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
 
     private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos
 
@@ -146,7 +146,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println(
-            "Current best fitness: " + genBestFitness + " Generation: "+ generationNum + " Seed: " + SEED);
+            "Current best fitness: " + genBestFitness + " Generation: "+ generationNum + " Population size:" + POPULATION_SIZE + " Selection rate:"+ SELECTION_PERCENTAGE+ "Mutation rate:"+ MUTATION_RATE + " Seed: " + SEED);
 
         if(genBestFitness>bestFitness){ // Atualizar o melhor fitness se o fitness da geração atual for melhor
             bestFitness = genBestFitness;
