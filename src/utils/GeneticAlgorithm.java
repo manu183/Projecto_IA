@@ -146,7 +146,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println(
-            "Current best fitness: " + genBestFitness + " Generation: "+ generationNum + " Population size:" + POPULATION_SIZE + " Selection rate:"+ SELECTION_PERCENTAGE+ "Mutation rate:"+ MUTATION_RATE + " Seed: " + SEED);
+            "Current best fitness: " + genBestFitness + " Generation: "+ generationNum + " Population size:" + POPULATION_SIZE + " Selection rate:"+ SELECTION_PERCENTAGE+ " Mutation rate:"+ MUTATION_RATE + " Seed: " + SEED);
 
         if(genBestFitness>bestFitness){ // Atualizar o melhor fitness se o fitness da geração atual for melhor
             bestFitness = genBestFitness;
