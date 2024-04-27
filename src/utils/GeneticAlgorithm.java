@@ -85,35 +85,24 @@ public class GeneticAlgorithm {
     }
 
     private FeedforwardNeuralNetwork selectParent() {
-        FeedforwardNeuralNetwork bigger = randomParent();
-        int biggerIndex = findIndexOfFNN(bigger);
-        int biggerFitness = population[biggerIndex].getFitness();
+        Individuo bigger = randomParent();
+        int biggerFitness = bigger.getFitness();
         for (int i = 0; i < k_tournament - 1; i++) { // É k_tournament-1 porque 1 dos k_tournaments foi atribuído ao
             // bigger
-            FeedforwardNeuralNetwork actual = randomParent();
-            int actualIndex = findIndexOfFNN(actual);
-            int actualFitness = population[actualIndex].getFitness();
+            Individuo actual = randomParent();
+            int actualFitness = actual.getFitness();
             if (actualFitness > biggerFitness)
             bigger = actual;
             biggerFitness = actualFitness;
         }
-        return bigger;
+
+        return bigger.getFNN();
     }
 
-    private int findIndexOfFNN(FeedforwardNeuralNetwork fnn){ // Encontrar o índice de um FeedforwardNeuralNetwork na população
-        for(int i=0; i<POPULATION_SIZE; i++){
-            if(population[i].getFNN().equals(fnn)){
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
-    private FeedforwardNeuralNetwork randomParent() {
+    private Individuo randomParent() {
         Random random = new Random();
         int index = random.nextInt(POPULATION_SIZE);
-        return population[index].getFNN();
+        return population[index];
     }
 
     private Individuo[] selection() {
