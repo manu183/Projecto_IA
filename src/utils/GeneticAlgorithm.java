@@ -11,18 +11,18 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 100;
+    private final int POPULATION_SIZE = 300;
     // private final int NUM_GENERATIONS = 10;
-    private final int NUM_GENERATIONS = 30000;
+    private final int NUM_GENERATIONS = 100;
     // private final double MUTATION_RATE = 0.05;
-    private final double MUTATION_RATE = 0.05;
+    private final double MUTATION_RATE = 0.6;
     // private final double SELECTION_PERCENTAGE = 0.2;
     private final double SELECTION_PERCENTAGE = 0.2;
     private final int K_TOURNAMENT = 5;
     private final int FITNESS_GOAL = 999999999; // O número de fitness que se pretende alcançar
 
     public static final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    public static final int HIDDEN_DIM = 5; // Número de neurônios na camada oculta
+    public static final int HIDDEN_DIM = 3; // Número de neurônios na camada oculta
     public static final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
 
     private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos
@@ -96,26 +96,6 @@ public class GeneticAlgorithm {
         return newChild;
     }
 
-    private FeedforwardNeuralNetwork scrambleMutation2(FeedforwardNeuralNetwork child) { // Aplicar a scramble mutation
-        // a um indivíduo
-        double[] charArray = child.getNeuralNetwork();
-        Random random = new Random();
-        int size = 10;
-        int randomIndex1 = random.nextInt(charArray.length - size + 1);
-        int randomIndex2 = randomIndex1 + size - 1;
-
-        int smaller = Math.min(randomIndex1, randomIndex2);
-        double[] array = new double[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = charArray[smaller + i];
-        }
-        Collections.shuffle(Arrays.asList(array));
-        for (int i = 0; i < size; i++) {
-            charArray[smaller + i] = array[i];
-        }
-        FeedforwardNeuralNetwork newChild = new FeedforwardNeuralNetwork(INPUT_DIM, HIDDEN_DIM, OUTPUT_DIM, charArray);
-        return newChild;
-    }
 
     private FeedforwardNeuralNetwork crossover(FeedforwardNeuralNetwork parent1, FeedforwardNeuralNetwork parent2) {
         double[] childArray = new double[parent1.getNeuralNetwork().length];
@@ -181,7 +161,7 @@ public class GeneticAlgorithm {
         indexes = Utils.generateNDifferentsNumbersSimplified(POPULATION_SIZE, numberOfMutations);
         for (int actual : indexes) {
             Individuo toMutate = mutatedPopulationList.get(actual);
-            FeedforwardNeuralNetwork mutatedFNN = scrambleMutation2(toMutate.getFNN()); // Aplicar a mutação ao indivíduo
+            FeedforwardNeuralNetwork mutatedFNN = swapMutation(toMutate.getFNN()); // Aplicar a mutação ao indivíduo
             // FeedforwardNeuralNetwork mutatedFNN = scrambleMutation(toMutate.getFNN());
             Individuo mutatedIndividuo = new Individuo(mutatedFNN, 0); // O fitness é 0 porque ainda não foi calculado
             mutatedPopulationList.set(actual, mutatedIndividuo); // Substituir o indivíduo original pelo indivíduo
@@ -239,7 +219,7 @@ public class GeneticAlgorithm {
         Arrays.sort(population); // Ordenar a população por fitness
         FeedforwardNeuralNetwork best = population[POPULATION_SIZE - 1].getFNN();// O melhor indivíduo é o último da
                                                                                  // população ordenada
-        Utils.printToFile("best.txt", best);
+        Utils.printToFile("scores/score_" + population[POPULATION_SIZE-1].getFitness() +".txt", best);
         System.out.println(actualGeneration + " generations runned");
         Breakout game = new Breakout(best, SEED);
         System.out.println("Best Individuo: " + best);
