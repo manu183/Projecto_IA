@@ -1,5 +1,8 @@
 package utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 public class Individuo implements Comparable<Individuo> {
     private FeedforwardNeuralNetwork fnn;
     private int fitness;
@@ -28,12 +31,12 @@ public class Individuo implements Comparable<Individuo> {
 
     @Override
     public String toString() {
-        return "Individuo [fitness=" + fitness + "]";
+        return "Individuo [fitness=" + fitness + "]"/*+"\n Rede neuronal: \n" + fnn.toString()*/;
     }
 
     @Override
     public int compareTo(Individuo o) {
-        return o.getFitness() - this.getFitness();
+        return this.getFitness() - o.getFitness();
     }
 
     
@@ -55,6 +58,12 @@ public class Individuo implements Comparable<Individuo> {
         }
         System.out.println("Ordenando");
         java.util.Arrays.sort(popIndividuos);
+        for (Individuo individuo : popIndividuos) {
+            System.out.println(individuo);
+        }
+        System.out.println("Embaralhando");
+        Collections.shuffle(Arrays.asList(popIndividuos));  // Embaralhar a população
+
         for (Individuo individuo : popIndividuos) {
             System.out.println(individuo);
         }
