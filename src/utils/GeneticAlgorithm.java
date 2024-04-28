@@ -15,14 +15,14 @@ public class GeneticAlgorithm {
     // private final int NUM_GENERATIONS = 10;
     private final int NUM_GENERATIONS = 10000;
     // private final double MUTATION_RATE = 0.05;
-    private final double MUTATION_RATE = 0.2;
+    private final double MUTATION_RATE = 0.05;
     // private final double SELECTION_PERCENTAGE = 0.2;
     private final double SELECTION_PERCENTAGE = 0.4;
     private final int K_TOURNAMENT = 5;
     private final int FITNESS_GOAL = 999999999; // O número de fitness que se pretende alcançar
 
     public static final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    public static final int HIDDEN_DIM = 3; // Número de neurônios na camada oculta
+    public static final int HIDDEN_DIM = 4; // Número de neurônios na camada oculta
     public static final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
 
     private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos

@@ -80,6 +80,7 @@ public class FeedforwardNeuralNetwork implements GameController {
         for (int i = 0; i < inputDim; i++) {
             for (int j = 0; j < hiddenDim; j++) {
                 inputHiddenWeights[i][j] = Math.random();
+                
             }
         }
 
@@ -113,8 +114,8 @@ public class FeedforwardNeuralNetwork implements GameController {
                 hiddenLayer[i] += currentState[j] * inputHiddenWeights[j][i];
             }
             hiddenLayer[i] += hiddenBiases[i];
-            hiddenLayer[i] = sigmoid(hiddenLayer[i]);
-            //hiddenLayer[i] = reLu(hiddenLayer[i]);
+            //hiddenLayer[i] = sigmoid(hiddenLayer[i]);
+            hiddenLayer[i] = reLu(hiddenLayer[i]);
         }
 
         // Calculate activations for output layer
@@ -124,8 +125,8 @@ public class FeedforwardNeuralNetwork implements GameController {
                 outputLayer[i] += hiddenLayer[j] * hiddenOutputWeights[j][i];
             }
             outputLayer[i] += outputBiases[i];
-            outputLayer[i] = sigmoid(outputLayer[i]);
-            //outputLayer[i] = reLu(outputLayer[i]);
+            //outputLayer[i] = sigmoid(outputLayer[i]);
+            outputLayer[i] = reLu(outputLayer[i]);
         }
 
         return outputLayer;
