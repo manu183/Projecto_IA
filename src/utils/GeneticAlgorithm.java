@@ -11,9 +11,9 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 300;
+    private final int POPULATION_SIZE = 150;
     // private final int NUM_GENERATIONS = 10;
-    private final int NUM_GENERATIONS = 100;
+    private final int NUM_GENERATIONS = 1000;
     // private final double MUTATION_RATE = 0.05;
     private final double MUTATION_RATE = 0.6;
     // private final double SELECTION_PERCENTAGE = 0.2;
@@ -219,7 +219,7 @@ public class GeneticAlgorithm {
         Arrays.sort(population); // Ordenar a população por fitness
         FeedforwardNeuralNetwork best = population[POPULATION_SIZE - 1].getFNN();// O melhor indivíduo é o último da
                                                                                  // população ordenada
-        Utils.printToFile("scores/score_" + population[POPULATION_SIZE-1].getFitness() +".txt", best);
+        Utils.printToFile("scores/" + population[POPULATION_SIZE-1].getFitness() +".txt", best);
         System.out.println(actualGeneration + " generations runned");
         Breakout game = new Breakout(best, SEED);
         System.out.println("Best Individuo: " + best);
