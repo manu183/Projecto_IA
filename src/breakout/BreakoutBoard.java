@@ -110,10 +110,6 @@ public class BreakoutBoard extends JPanel {
 		return kills * 100000 + 100000 - time;
 	}
 
-	public int getFitness2() {
-		return kills*100000;
-
-	}
 
 	private int[] getState() {
 		int[] state = new int[Commons.BREAKOUT_STATE_SIZE];
