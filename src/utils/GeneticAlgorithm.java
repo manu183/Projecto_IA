@@ -11,18 +11,18 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 150;
+    private final int POPULATION_SIZE = 300;
     // private final int NUM_GENERATIONS = 10;
-    private final int NUM_GENERATIONS = 1000;
+    private final int NUM_GENERATIONS = 30000;
     // private final double MUTATION_RATE = 0.05;
-    private final double MUTATION_RATE = 0.6;
+    private final double MUTATION_RATE = 0.2;
     // private final double SELECTION_PERCENTAGE = 0.2;
     private final double SELECTION_PERCENTAGE = 0.2;
-    private final int K_TOURNAMENT = 5;
+    private final int K_TOURNAMENT = 2;
     private final int FITNESS_GOAL = 999999999; // O número de fitness que se pretende alcançar
 
     public static final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    public static final int HIDDEN_DIM = 3; // Número de neurônios na camada oculta
+    public static final int HIDDEN_DIM = 5; // Número de neurônios na camada oculta
     public static final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
 
     private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos
@@ -162,7 +162,7 @@ public class GeneticAlgorithm {
         for (int actual : indexes) {
             Individuo toMutate = mutatedPopulationList.get(actual);
             FeedforwardNeuralNetwork mutatedFNN = swapMutation(toMutate.getFNN()); // Aplicar a mutação ao indivíduo
-            // FeedforwardNeuralNetwork mutatedFNN = scrambleMutation(toMutate.getFNN());
+            //FeedforwardNeuralNetwork mutatedFNN = scrambleMutation(toMutate.getFNN());
             Individuo mutatedIndividuo = new Individuo(mutatedFNN, 0); // O fitness é 0 porque ainda não foi calculado
             mutatedPopulationList.set(actual, mutatedIndividuo); // Substituir o indivíduo original pelo indivíduo
                                                                  // mutado
@@ -182,7 +182,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println(
-                "Generation:" + generationNum + " |Generation best fitness:" + genBestFitness
+                "Generation:" + generationNum + " | Generation best fitness:" + genBestFitness
                         + " | Overall best fitness:" + bestFitness + " | Fitness goal:" + FITNESS_GOAL);
 
         if (genBestFitness > bestFitness) { // Atualizar o melhor fitness se o fitness da geração atual for melhor
