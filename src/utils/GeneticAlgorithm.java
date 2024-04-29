@@ -34,22 +34,22 @@ public class GeneticAlgorithm {
             SELECTION_PERCENTAGE = 0.4;
             K_TOURNAMENT = 5;
             FITNESS_GOAL = 100000000;
-            INPUT_DIM = 7;
+            INPUT_DIM = Commons.BREAKOUT_STATE_SIZE;
             HIDDEN_DIM = 5;
-            OUTPUT_DIM = 2;
+            OUTPUT_DIM = Commons.BREAKOUT_NUM_ACTIONS;
             population = new Individuo[POPULATION_SIZE];
 
         } else if (gameName.toLowerCase().equals("pacman")) {
             this.gameName = gameName.toLowerCase();
             POPULATION_SIZE = 40;
             NUM_GENERATIONS = 50;
-            MUTATION_RATE = 0.3;
+            MUTATION_RATE = 0.4;
             SELECTION_PERCENTAGE = 0.4;
             K_TOURNAMENT = 5;
             FITNESS_GOAL = 100000000;
-            INPUT_DIM = 7;
+            INPUT_DIM = Commons.PACMAN_STATE_SIZE;
             HIDDEN_DIM = 5;
-            OUTPUT_DIM = 2;
+            OUTPUT_DIM = Commons.PACMAN_NUM_ACTIONS;
             population = new Individuo[POPULATION_SIZE];
 
         } else {
@@ -249,7 +249,7 @@ public class GeneticAlgorithm {
 
     public static void main(String[] args) {
         System.out.println("Testing Genetic Algorithm");
-        GeneticAlgorithm ga = new GeneticAlgorithm("d");
+        GeneticAlgorithm ga = new GeneticAlgorithm("pacman");
         ga.run();
     }
 }

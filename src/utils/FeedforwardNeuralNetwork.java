@@ -1,6 +1,7 @@
 package utils;
 
 import breakout.BreakoutBoard;
+import pacman.PacmanBoard;
 
 public class FeedforwardNeuralNetwork implements GameController {
 
@@ -170,23 +171,43 @@ public class FeedforwardNeuralNetwork implements GameController {
 
     @Override
     public int nextMove(int[] currentState) {
-        // Implemente aqui a lógica para determinar o próximo movimento com base no estado atual do jogo
-
-        // Por exemplo, você pode usar a passagem direta (forward pass) pela rede neural
         double[] outputValues = forward(currentState);
-       // System.out.println("Output values: "+outputValues[0]+" "+outputValues[1]);
-
-        // Em seguida, interprete os valores de saída para decidir o próximo movimento
-        // Por exemplo, escolha a ação com maior probabilidade
-        if (outputValues[0] > outputValues[1]) {
-            return BreakoutBoard.LEFT; // Mova para a esquerda
-        }else if (outputValues[0] < outputValues[1]) {
-            return BreakoutBoard.RIGHT; // Mova para a direita
+        if(currentState.length == Commons.BREAKOUT_STATE_SIZE){
+            if (outputValues[0] > outputValues[1]) {
+                return BreakoutBoard.LEFT; // Mova para a esquerda
+            } else if (outputValues[0] < outputValues[1]) {
+                return BreakoutBoard.RIGHT; // Mova para a direita
+            }
+        }
+        if(currentState.length == Commons.PACMAN_STATE_SIZE){
+            int max = 0;
+            for(int i=1; i<outputValues.length; i++){
+                if(outputValues[i]>outputValues[max]){
+                    max = i;
+                }
+            }
+            if (max == 0) {
+                return PacmanBoard.NONE; // Pare
+            }
+            if(max == 1){
+                return PacmanBoard.LEFT; // Mova para a esquerda
+            }
+            if(max == 2){
+                return PacmanBoard.RIGHT; // Mova para a direita
+            }
+            if(max == 3){
+                return PacmanBoard.UP; // Mova para cima
+            }
+            if(max == 4){
+                return PacmanBoard.DOWN; // Mova para baixo
+            }
         }
         return 0; // Pare
-            
-        //return BreakoutBoard.RIGHT; // Mova para a direita
     }
+    
+            
+        
+    
 
     @Override
     public String toString(){
@@ -197,43 +218,4 @@ public class FeedforwardNeuralNetwork implements GameController {
         return res;
     }
 
-    // Exemplo de uso da rede neural
-    public static void main(String[] args) {
-        // Defina as dimensões da rede neural
-        int inputDim = 7; // Número de entradas
-        int hiddenDim = 3; // Número de neurônios na camada oculta
-        int outputDim = 2; // Número de saídas
-    
-        // Instancie a rede neural
-        FeedforwardNeuralNetwork neuralNetwork1 = new FeedforwardNeuralNetwork(inputDim, hiddenDim, outputDim);
-        // Create an object using the second constructor
-        FeedforwardNeuralNetwork neuralNetwork2 = new FeedforwardNeuralNetwork(new double[]{1,2,3}, new double[]{5}, new double[][]{{1,2,4}}, new double[][]{{1}});
-    
-        // Defina algumas entradas de teste
-        int [] inputValues = {12,34,56,78,91,23,45}; // Exemplo de valores de entrada
-
-        // Faça uma passagem direta (forward pass) pela rede neural
-        double[] outputValues = neuralNetwork1.forward(inputValues);
-    /* 
-        // Imprima as saídas geradas
-        System.out.println("Saída da rede neural:");
-        for (double outputValue : outputValues) {
-            System.out.println(outputValue);
-        }
-
-        // Faça uma passagem direta (forward pass) pela rede neural2
-        double[] outputValues2 = neuralNetwork2.forward(inputValues);
-    
-        // Imprima as saídas geradas
-        System.out.println("Saída da rede neural2:");
-        for (double outputValue : outputValues2) {
-            System.out.println(outputValue);
-        }
-    */
-        //System.out.println(neuralNetwork1.toString());
-        //System.out.println(neuralNetwork1.getNeuralNetwork().length);
-
-        //FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork("best.txt");
-        //System.out.println(nn.toString());
-    }
 }
