@@ -13,7 +13,6 @@ public class FeedforwardNeuralNetwork implements GameController {
     private double[][] hiddenOutputWeights; // Weights between hidden and output layer
 
 
-
     // Initialize the weights and biases of the network
     public FeedforwardNeuralNetwork(int inputDim, int hiddenDim, int outputDim) {
         this.inputDim = inputDim;
@@ -115,7 +114,7 @@ public class FeedforwardNeuralNetwork implements GameController {
             }
             hiddenLayer[i] += hiddenBiases[i];
             //hiddenLayer[i] = sigmoid(hiddenLayer[i]);
-            hiddenLayer[i] = activationFunction(hiddenLayer[i]);
+            hiddenLayer[i] = reLu(hiddenLayer[i]);
         }
 
         // Calculate activations for output layer
@@ -126,44 +125,14 @@ public class FeedforwardNeuralNetwork implements GameController {
             }
             outputLayer[i] += outputBiases[i];
             //outputLayer[i] = sigmoid(outputLayer[i]);
-            outputLayer[i] = activationFunction(outputLayer[i]);
+            outputLayer[i] = reLu(outputLayer[i]);
         }
-
         return outputLayer;
     }
 
-    // Sigmoid activation function
-    private double sigmoid(double x) {
-        return 1 / (1 + Math.exp(-x));
-    }
 
     private double reLu(double x) {
         return Math.max(0, x);
-    }
-
-    private double tanh(double x) {
-        return Math.tanh(x);
-    }
-
-    private double leakyReLu(double x) {
-        return Math.max(0.01*x, x);
-    }
-
-    
-
-    private double heaviside(double x) {
-        if (x < 0) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    
-    
-
-    private double activationFunction(double x) {
-        return reLu(x);
     }
 
     // Get the weights and biases of the network

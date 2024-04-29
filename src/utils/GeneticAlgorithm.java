@@ -8,9 +8,9 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 100;
-    private final int NUM_GENERATIONS = 6000;
-    private double MUTATION_RATE = 0.3;
+    private final int POPULATION_SIZE = 150; // Tamanho da população inicial                                                                                                                                                                                                                                                                                                                                                                         ;
+    private final int NUM_GENERATIONS = 12000;
+    private double MUTATION_RATE = 0.45;
     private final double SELECTION_PERCENTAGE = 0.4;
     private final int K_TOURNAMENT = 5;
     private final int FITNESS_GOAL = 100000000; // O número de fitness que se pretende alcançar
@@ -169,7 +169,7 @@ public class GeneticAlgorithm {
 
         }
         // Escrever o melhor indivíduo num ficheiro
-        Utils.printToFile("scores/" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
+        Utils.printToFile("scores/" + bestOverall.getFitness() + ".txt", bestOverall.getFNN());
         System.out.println(actualGeneration + " generations runned");
         Breakout game = new Breakout(bestOverall.getFNN(), SEED);
         System.out.println("Best Individuo: " + bestOverall);
