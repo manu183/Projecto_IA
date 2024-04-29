@@ -1,9 +1,7 @@
 package utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import breakout.Breakout;
@@ -11,18 +9,18 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 300;
+    private final int POPULATION_SIZE = 100;
     // private final int NUM_GENERATIONS = 10;
-    private final int NUM_GENERATIONS = 30000;
+    private final int NUM_GENERATIONS = 6000;
     // private final double MUTATION_RATE = 0.05;
-    private final double MUTATION_RATE = 0.2;
+    private final double MUTATION_RATE = 0.1;
     // private final double SELECTION_PERCENTAGE = 0.2;
-    private final double SELECTION_PERCENTAGE = 0.2;
-    private final int K_TOURNAMENT = 2;
+    private final double SELECTION_PERCENTAGE = 0.3;
+    private final int K_TOURNAMENT = 17;
     private final int FITNESS_GOAL = 999999999; // O número de fitness que se pretende alcançar
 
     public static final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    public static final int HIDDEN_DIM = 5; // Número de neurônios na camada oculta
+    public static final int HIDDEN_DIM = 4; // Número de neurônios na camada oculta
     public static final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
 
     private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos
@@ -57,9 +55,10 @@ public class GeneticAlgorithm {
             newPopulation[mantainedSize + i] = generatedPopulation[i];
         }
 
-        Collections.shuffle(Arrays.asList(newPopulation)); // Embaralhar a população
+        //Collections.shuffle(Arrays.asList(newPopulation)); // Embaralhar a população
         return newPopulation;
     }
+
 
     private FeedforwardNeuralNetwork swapMutation(FeedforwardNeuralNetwork child) { // Aplicar a swap mutation a um
                                                                                     // indivíduo
@@ -149,25 +148,21 @@ public class GeneticAlgorithm {
     }
 
     private void mutatePopulation() { // Aplicar a mutação à população de acordo com a taxa de mutação
-        Individuo[] mutatedPopulation = population.clone(); // Copiar a população para um array auxiliar de forma a não
+        //Individuo[] mutatedPopulation = population.clone(); // Copiar a população para um array auxiliar de forma a não
                                                             // alterar a população original
-        List<Individuo> mutatedPopulationList = new ArrayList<>(Arrays.asList(mutatedPopulation));// Converter o array
-                                                                                                  // para uma lista de
-                                                                                                  // forma a ser mais
-                                                                                                  // fácil adicionar e
-                                                                                                  // remover elementos
+
         int numberOfMutations = (int) (POPULATION_SIZE * MUTATION_RATE);
         int[] indexes = new int[numberOfMutations];
         indexes = Utils.generateNDifferentsNumbersSimplified(POPULATION_SIZE, numberOfMutations);
         for (int actual : indexes) {
-            Individuo toMutate = mutatedPopulationList.get(actual);
-            FeedforwardNeuralNetwork mutatedFNN = swapMutation(toMutate.getFNN()); // Aplicar a mutação ao indivíduo
-            //FeedforwardNeuralNetwork mutatedFNN = scrambleMutation(toMutate.getFNN());
+            Individuo toMutate = population[actual];
+            //FeedforwardNeuralNetwork mutatedFNN = swapMutation(toMutate.getFNN()); // Aplicar a mutação ao indivíduo
+            FeedforwardNeuralNetwork mutatedFNN = scrambleMutation(toMutate.getFNN());
             Individuo mutatedIndividuo = new Individuo(mutatedFNN, 0); // O fitness é 0 porque ainda não foi calculado
-            mutatedPopulationList.set(actual, mutatedIndividuo); // Substituir o indivíduo original pelo indivíduo
+            population[actual]=mutatedIndividuo; // Substituir o indivíduo original pelo indivíduo
                                                                  // mutado
         }
-        population = mutatedPopulationList.toArray(new Individuo[POPULATION_SIZE]); // Converter a lista para um array
+        //population = mutatedPopulation;
     }
 
     private void runGeneration(int generationNum) { // Executar uma geração e guardar os fitnesses de cada indivíduo
@@ -210,7 +205,6 @@ public class GeneticAlgorithm {
             population = createNewPopulation(newPopulation, mantainedPopulation); // Criar a nova população com base na
                                                                                   // nova população e na população
                                                                                   // mantida
-
             mutatePopulation(); // Aplicar a mutação à população
 
             actualGeneration++;

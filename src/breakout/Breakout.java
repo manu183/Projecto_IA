@@ -26,7 +26,7 @@ public class Breakout extends JFrame {
 	public static void main(String[] args) {
 		//Breakout game = new Breakout(new RandomController(), 999999999);
 		//Breakout game = new Breakout(new RandomController(), 0); //O classe que implementa o GameController é a NeuralNetwork
-		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(GeneticAlgorithm.INPUT_DIM, GeneticAlgorithm.HIDDEN_DIM, GeneticAlgorithm.OUTPUT_DIM, "scores/best.txt");
+		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(GeneticAlgorithm.INPUT_DIM, 20, GeneticAlgorithm.OUTPUT_DIM, "scores/397063.txt");
 		Breakout nnGame = new Breakout(nn, GeneticAlgorithm.SEED);
 		//Breakout game = new Breakout(new FeedforwardNeuralNetwork(7, 5, 2), 0);
 	}
