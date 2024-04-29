@@ -230,11 +230,11 @@ public class GeneticAlgorithm {
         }
 
         if(gameName.equals("breakout")){
-            Utils.printToFile("scores/breakout_" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
+            Utils.printToFile("scores/breakout/" + (int)bestOverall.getFitness() + ".txt", bestOverall.getFNN());
             System.out.println(actualGeneration + " generations runned");
             Breakout game = new Breakout(bestOverall.getFNN(), SEED);
         }else if(gameName.equals("pacman")){
-            Utils.printToFile("scores/pacman_" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
+            Utils.printToFile("scores/pacman/" + (int)bestOverall.getFitness() + ".txt", bestOverall.getFNN());
             System.out.println(actualGeneration + " generations runned");
             Pacman game = new Pacman(bestOverall.getFNN(),true, SEED);
         }
@@ -249,7 +249,7 @@ public class GeneticAlgorithm {
 
     public static void main(String[] args) {
         System.out.println("Testing Genetic Algorithm");
-        GeneticAlgorithm ga = new GeneticAlgorithm("d");
+        GeneticAlgorithm ga = new GeneticAlgorithm("pacman");
         ga.run();
     }
 }
