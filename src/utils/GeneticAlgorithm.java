@@ -8,9 +8,9 @@ import breakout.BreakoutBoard;
 
 public class GeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 150; // Tamanho da população inicial                                                                                                                                                                                                                                                                                                                                                                         ;
-    private final int NUM_GENERATIONS = 12000;
-    private double MUTATION_RATE = 0.45;
+    private final int POPULATION_SIZE = 300; // Tamanho da população inicial                                                                                                                                                                                                                                                                                                                                                                         ;
+    private final int NUM_GENERATIONS = 1000;
+    private double MUTATION_RATE = 0.3;
     private final double SELECTION_PERCENTAGE = 0.4;
     private final int K_TOURNAMENT = 5;
     private final int FITNESS_GOAL = 100000000; // O número de fitness que se pretende alcançar
@@ -138,38 +138,54 @@ public class GeneticAlgorithm {
         return genBest;
     }
 
-    public void run() { // Correr o algoritmo genético
-        int actualGeneration = 0; // indice de geração atual
+    public void run() {
+        int actualGeneration = 0;
+        int stagnantGenerations = 0;
+        double lastFitness = 0;
         Individuo bestOverall = new Individuo(null, 0);
-        while (actualGeneration < NUM_GENERATIONS && bestOverall.getFitness() < FITNESS_GOAL) {// Para cada geração
-            Individuo genBest = runGeneration(); // Executar uma geração, calculando os fitnesses de cada indivíduo
+    
+        while (actualGeneration < NUM_GENERATIONS && bestOverall.getFitness() < FITNESS_GOAL) {
+            Individuo genBest = runGeneration();
             int newPopulationSize = (int) (POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
             Individuo[] newPopulation = new Individuo[newPopulationSize];
             Individuo[] mantainedPopulation = selection();
-
-            for (int j = 0; j < newPopulationSize; j++) {// Para cada indíviduo que será gerado
-                FeedforwardNeuralNetwork parent1 = selectParent(); // Selecionar os pai 1
-                FeedforwardNeuralNetwork parent2 = selectParent(); // Selecionar os pai 2
-                FeedforwardNeuralNetwork child = crossover(parent1, parent2); // Cruzar os pais para gerar um filho
-                newPopulation[j] = new Individuo(child, 0);// Adicionar o indivíduo gerado à nova população que tem por
-                                                           // defeito o fitness 0 porque ainda não foi calculado
+    
+            for (int j = 0; j < newPopulationSize; j++) {
+                FeedforwardNeuralNetwork parent1 = selectParent();
+                FeedforwardNeuralNetwork parent2 = selectParent();
+                FeedforwardNeuralNetwork child = crossover(parent1, parent2);
+                newPopulation[j] = new Individuo(child, 0);
             }
-            population = createNewPopulation(newPopulation, mantainedPopulation); // Criar a nova população com base na
-                                                                                  // nova população e na população
-                                                                                  // mantida
-            mutatePopulation(); // Aplicar a mutação à população
+    
+            population = createNewPopulation(newPopulation, mantainedPopulation);
+            mutatePopulation();
+    
             if (genBest.getFitness() > bestOverall.getFitness()) {
                 bestOverall = genBest;
+                stagnantGenerations = 0;
+            } else if (genBest.getFitness() == lastFitness) {
+                stagnantGenerations++;
+            } else {
+                stagnantGenerations = 0;
             }
-            System.out.println(
-                "Generation:" + actualGeneration + " | Generation best fitness:" + genBest.getFitness()
-                        + " | Overall best fitness:" + bestOverall.getFitness() + " | Fitness goal:" + FITNESS_GOAL
-                        + " | Population size:" + POPULATION_SIZE + " | Mutation rate:" + MUTATION_RATE);
+    
+            if (stagnantGenerations >= 50) {
+                MUTATION_RATE += 0.01;
+                if (MUTATION_RATE > 1) {
+                    MUTATION_RATE = 1;
+                }
+                stagnantGenerations = 0;
+            }
+    
+            lastFitness = genBest.getFitness();
+    
+            System.out.println("Generation:" + actualGeneration + " | Generation best fitness:" + genBest.getFitness()
+                    + " | Overall best fitness:" + bestOverall.getFitness() + " | Fitness goal:" + FITNESS_GOAL
+                    + " | Population size:" + POPULATION_SIZE + " | Mutation rate:" + MUTATION_RATE);
             actualGeneration++;
-
         }
-        // Escrever o melhor indivíduo num ficheiro
-        Utils.printToFile("scores/" + bestOverall.getFitness() + ".txt", bestOverall.getFNN());
+    
+        Utils.printToFile("scores/" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
         System.out.println(actualGeneration + " generations runned");
         Breakout game = new Breakout(bestOverall.getFNN(), SEED);
         System.out.println("Best Individuo: " + bestOverall);
@@ -179,8 +195,9 @@ public class GeneticAlgorithm {
                 + " | Generations number:" + NUM_GENERATIONS + " | k tournament:" + K_TOURNAMENT + " | Hidden dim:"
                 + HIDDEN_DIM + " | Input dim:"
                 + INPUT_DIM + " | Output dim:" + OUTPUT_DIM);
-
     }
+    
+    
 
     public static void main(String[] args) {
         System.out.println("Testing Genetic Algorithm");
