@@ -8,7 +8,11 @@ import java.io.ObjectInputStream;
 
 import javax.swing.JFrame;
 
+import breakout.Breakout;
+import utils.Commons;
+import utils.FeedforwardNeuralNetwork;
 import utils.GameController;
+import utils.GeneticAlgorithm;
 
 public class Pacman extends JFrame {
 
@@ -22,5 +26,11 @@ public class Pacman extends JFrame {
 			setLocationRelativeTo(null);
 			setVisible(true);
 		});
+	}
+
+	public static void main(String[] args) {
+		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(Commons.PACMAN_STATE_SIZE, 5,
+				Commons.PACMAN_NUM_ACTIONS, "scores/pacman/26000.txt");
+		Pacman nnGame = new Pacman(nn, true, GeneticAlgorithm.SEED);
 	}
 }
