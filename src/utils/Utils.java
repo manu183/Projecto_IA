@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Set;
 import java.io.FileWriter;
 
 public class Utils {
@@ -43,9 +40,6 @@ public class Utils {
                 for (String token : tokens) {
                     nnData.add(Double.parseDouble(token));
                 }
-
-                // TODO - Implementar a leitura dos dados do arquivo
-
             }
             scanner.close();
         } catch (IOException e) {
@@ -59,42 +53,13 @@ public class Utils {
 
         return values;
     }
-    
-    public static int[] generateNDifferentsNumbers(int numbersToGenerate, int max) { // Este método é o mais correto mas é computacionalmente mais custoso
-        Random random = new Random();
-        int[] numbers = new int[numbersToGenerate];
-        for (int i = 0; i < numbersToGenerate; i++) {
-            int generatedNumber = random.nextInt(max);
-            while (contains(numbers, generatedNumber)) {
-                generatedNumber = random.nextInt(max);
-            }
-            numbers[i] = generatedNumber;
 
-        }
-        return numbers;
-    }
-
-    public static int[] generateNDifferentsNumbersSimplified(int numbersToGenerate, int max) { // Este método é mais eficiente mas não é o mais correto porque pode haver indices repetidos
+    public static int[] generateNNumbers(int numbersToGenerate, int max) { // Este método é mais eficiente mas não é o mais correto porque pode haver indices repetidos
         Random random = new Random();
         int[] numbers = new int[numbersToGenerate];
         for(int i = 0; i < numbersToGenerate; i++) {
             numbers[i] = random.nextInt(max);
         }
         return numbers;
-    }
-
-
-    private static boolean contains(int[] numbers, int number) {
-        for (int i = 0; i < numbers.length; i++) {
-            if (numbers[i] == number) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void main(String[] args) {
-        int[] numbers = generateNDifferentsNumbersSimplified(10, 100);
-        System.out.println(Arrays.toString(numbers));
     }
 }
