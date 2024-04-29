@@ -24,9 +24,11 @@ public class Breakout extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		
 		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(Commons.BREAKOUT_STATE_SIZE, 5,
-				Commons.BREAKOUT_NUM_ACTIONS, "scores/breakout/397063.txt");
+				Commons.BREAKOUT_NUM_ACTIONS, "scores/breakout/595494.txt");
 		Breakout nnGame = new Breakout(nn, GeneticAlgorithm.SEED);
+
 	}
 
 }

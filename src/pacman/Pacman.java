@@ -30,7 +30,7 @@ public class Pacman extends JFrame {
 
 	public static void main(String[] args) {
 		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(Commons.PACMAN_STATE_SIZE, 5,
-				Commons.PACMAN_NUM_ACTIONS, "scores/pacman/26000.txt");
+				Commons.PACMAN_NUM_ACTIONS, "scores/pacman/35002.txt");
 		Pacman nnGame = new Pacman(nn, true, GeneticAlgorithm.SEED);
 	}
 }
