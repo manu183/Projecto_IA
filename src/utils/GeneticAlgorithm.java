@@ -28,9 +28,9 @@ public class GeneticAlgorithm {
     public GeneticAlgorithm(String gameName) {
         if (gameName.toLowerCase().equals("breakout")) {
             this.gameName = gameName.toLowerCase();
-            POPULATION_SIZE = 300;
+            POPULATION_SIZE = 377;
             NUM_GENERATIONS = 1000;
-            MUTATION_RATE = 0.3;
+            MUTATION_RATE = 0.35;
             SELECTION_PERCENTAGE = 0.4;
             K_TOURNAMENT = 5;
             FITNESS_GOAL = 100000000;
@@ -131,7 +131,7 @@ public class GeneticAlgorithm {
 
     private Individuo[] selection() {
         Arrays.sort(population); // Ordenar a população por fitness
-        int selectedPopulationSize = (int) (POPULATION_SIZE * SELECTION_PERCENTAGE);
+        int selectedPopulationSize = POPULATION_SIZE-(int)(POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
         Individuo[] selectedPopulation = new Individuo[selectedPopulationSize];
 
         for (int i = 0; i < selectedPopulationSize; i++) {
@@ -249,7 +249,7 @@ public class GeneticAlgorithm {
 
     public static void main(String[] args) {
         System.out.println("Testing Genetic Algorithm");
-        GeneticAlgorithm ga = new GeneticAlgorithm("pacman");
+        GeneticAlgorithm ga = new GeneticAlgorithm("breakout");
         ga.run();
     }
 }
