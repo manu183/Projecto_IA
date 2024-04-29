@@ -28,11 +28,11 @@ public class GeneticAlgorithm {
     public GeneticAlgorithm(String gameName) {
         if (gameName.toLowerCase().equals("breakout")) {
             this.gameName = gameName.toLowerCase();
-            POPULATION_SIZE = 100;
-            NUM_GENERATIONS = 1000;
-            MUTATION_RATE = 0.2;
-            SELECTION_PERCENTAGE = 0.4;
-            K_TOURNAMENT = 8;
+            POPULATION_SIZE = 300;
+            NUM_GENERATIONS = 1500;
+            MUTATION_RATE = 0.3;
+            SELECTION_PERCENTAGE = 0.3;
+            K_TOURNAMENT = 100;
             FITNESS_GOAL = 100000000;
             INPUT_DIM = Commons.BREAKOUT_STATE_SIZE;
             HIDDEN_DIM = 5;
@@ -45,7 +45,7 @@ public class GeneticAlgorithm {
             NUM_GENERATIONS = 50;
             MUTATION_RATE = 0.4;
             SELECTION_PERCENTAGE = 0.4;
-            K_TOURNAMENT = 5;
+            K_TOURNAMENT = 10;
             FITNESS_GOAL = 100000000;
             INPUT_DIM = Commons.PACMAN_STATE_SIZE;
             HIDDEN_DIM = 5;
