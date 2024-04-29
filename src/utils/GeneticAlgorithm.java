@@ -5,25 +5,56 @@ import java.util.Random;
 
 import breakout.Breakout;
 import breakout.BreakoutBoard;
+import pacman.Pacman;
+import pacman.PacmanBoard;
 
 public class GeneticAlgorithm {
+    private String gameName;
+    private int POPULATION_SIZE = 0; // Tamanho da população inicial ;
+    private int NUM_GENERATIONS = 0;
+    private double MUTATION_RATE = 0;
+    private double SELECTION_PERCENTAGE = 0;
+    private int K_TOURNAMENT = 0;
+    private int FITNESS_GOAL = 0; // O número de fitness que se pretende alcançar
 
-    private final int POPULATION_SIZE = 300; // Tamanho da população inicial                                                                                                                                                                                                                                                                                                                                                                         ;
-    private final int NUM_GENERATIONS = 1000;
-    private double MUTATION_RATE = 0.3;
-    private final double SELECTION_PERCENTAGE = 0.4;
-    private final int K_TOURNAMENT = 5;
-    private final int FITNESS_GOAL = 100000000; // O número de fitness que se pretende alcançar
+    public int INPUT_DIM = 0; // Número de entradas da rede neural (estado do jogo)
+    public int HIDDEN_DIM = 0; // Número de neurônios na camada oculta
+    public int OUTPUT_DIM = 0; // Número de saídas da rede neural (ações do jogador)
 
-    public static final int INPUT_DIM = 7; // Número de entradas da rede neural (estado do jogo)
-    public static final int HIDDEN_DIM = 5; // Número de neurônios na camada oculta
-    public static final int OUTPUT_DIM = 2; // Número de saídas da rede neural (ações do jogador)
-
-    private Individuo[] population = new Individuo[POPULATION_SIZE]; // População de indivíduos
+    private Individuo[] population; // População de indivíduos
 
     public static final int SEED = 3;
 
-    public GeneticAlgorithm() {
+    public GeneticAlgorithm(String gameName) {
+        if (gameName.toLowerCase().equals("breakout")) {
+            this.gameName = gameName.toLowerCase();
+            POPULATION_SIZE = 300;
+            NUM_GENERATIONS = 1000;
+            MUTATION_RATE = 0.3;
+            SELECTION_PERCENTAGE = 0.4;
+            K_TOURNAMENT = 5;
+            FITNESS_GOAL = 100000000;
+            INPUT_DIM = 7;
+            HIDDEN_DIM = 5;
+            OUTPUT_DIM = 2;
+            population = new Individuo[POPULATION_SIZE];
+
+        } else if (gameName.toLowerCase().equals("pacman")) {
+            this.gameName = gameName.toLowerCase();
+            POPULATION_SIZE = 40;
+            NUM_GENERATIONS = 50;
+            MUTATION_RATE = 0.3;
+            SELECTION_PERCENTAGE = 0.4;
+            K_TOURNAMENT = 5;
+            FITNESS_GOAL = 100000000;
+            INPUT_DIM = 7;
+            HIDDEN_DIM = 5;
+            OUTPUT_DIM = 2;
+            population = new Individuo[POPULATION_SIZE];
+
+        } else {
+            throw new IllegalArgumentException("Invalid game name!!! Please choose between breakout and pacman");
+        }
         generatePopulation();
     }
 
@@ -121,19 +152,32 @@ public class GeneticAlgorithm {
         }
     }
 
-
-
     private Individuo runGeneration() { // Executar uma geração e guardar os fitnesses de cada indivíduo retornando o
-                                       // melhor indivíduo
-        Individuo genBest=new Individuo(null, 0);
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            BreakoutBoard game = new BreakoutBoard(population[i].getFNN(), false, SEED);
-            game.runSimulation();
-            int fitness = game.getFitness();
-            population[i].setFitness(fitness);
-            if (fitness > genBest.getFitness()) {
-                genBest=new Individuo(population[i].getFNN(), fitness);
+                                        // melhor indivíduo
+        Individuo genBest = new Individuo(null, 0);
+        if (gameName.equals("breakout")) {
+            for (int i = 0; i < POPULATION_SIZE; i++) {
+                BreakoutBoard game = new BreakoutBoard(population[i].getFNN(), false, SEED);
+                game.runSimulation();
+                double fitness = (double) game.getFitness();
+                population[i].setFitness(fitness);
+                if (fitness > genBest.getFitness()) {
+                    genBest = new Individuo(population[i].getFNN(), fitness);
+                }
             }
+
+        } else if (gameName.equals("pacman")) {
+            for (int i = 0; i < POPULATION_SIZE; i++) {
+                PacmanBoard game = new PacmanBoard(population[i].getFNN(), false, SEED);
+                game.runSimulation();
+                double fitness = game.getFitness();
+                population[i].setFitness(fitness);
+                if (fitness > genBest.getFitness()) {
+                    genBest = new Individuo(population[i].getFNN(), fitness);
+                }
+            }
+        }else {
+            throw new IllegalArgumentException("Invalid game!!!");
         }
         return genBest;
     }
@@ -143,23 +187,23 @@ public class GeneticAlgorithm {
         int stagnantGenerations = 0;
         double lastFitness = 0;
         Individuo bestOverall = new Individuo(null, 0);
-    
+
         while (actualGeneration < NUM_GENERATIONS && bestOverall.getFitness() < FITNESS_GOAL) {
             Individuo genBest = runGeneration();
             int newPopulationSize = (int) (POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
             Individuo[] newPopulation = new Individuo[newPopulationSize];
             Individuo[] mantainedPopulation = selection();
-    
+
             for (int j = 0; j < newPopulationSize; j++) {
                 FeedforwardNeuralNetwork parent1 = selectParent();
                 FeedforwardNeuralNetwork parent2 = selectParent();
                 FeedforwardNeuralNetwork child = crossover(parent1, parent2);
                 newPopulation[j] = new Individuo(child, 0);
             }
-    
+
             population = createNewPopulation(newPopulation, mantainedPopulation);
             mutatePopulation();
-    
+
             if (genBest.getFitness() > bestOverall.getFitness()) {
                 bestOverall = genBest;
                 stagnantGenerations = 0;
@@ -168,7 +212,7 @@ public class GeneticAlgorithm {
             } else {
                 stagnantGenerations = 0;
             }
-    
+
             if (stagnantGenerations >= 50) {
                 MUTATION_RATE += 0.01;
                 if (MUTATION_RATE > 1) {
@@ -176,18 +220,24 @@ public class GeneticAlgorithm {
                 }
                 stagnantGenerations = 0;
             }
-    
+
             lastFitness = genBest.getFitness();
-    
+
             System.out.println("Generation:" + actualGeneration + " | Generation best fitness:" + genBest.getFitness()
                     + " | Overall best fitness:" + bestOverall.getFitness() + " | Fitness goal:" + FITNESS_GOAL
                     + " | Population size:" + POPULATION_SIZE + " | Mutation rate:" + MUTATION_RATE);
             actualGeneration++;
         }
-    
-        Utils.printToFile("scores/" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
-        System.out.println(actualGeneration + " generations runned");
-        Breakout game = new Breakout(bestOverall.getFNN(), SEED);
+
+        if(gameName.equals("breakout")){
+            Utils.printToFile("scores/breakout_" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
+            System.out.println(actualGeneration + " generations runned");
+            Breakout game = new Breakout(bestOverall.getFNN(), SEED);
+        }else if(gameName.equals("pacman")){
+            Utils.printToFile("scores/pacman_" + population[POPULATION_SIZE - 1].getFitness() + ".txt", bestOverall.getFNN());
+            System.out.println(actualGeneration + " generations runned");
+            Pacman game = new Pacman(bestOverall.getFNN(),true, SEED);
+        }
         System.out.println("Best Individuo: " + bestOverall);
         System.out.println("Best Fitness: " + bestOverall.getFitness() + " | Population size:" + POPULATION_SIZE
                 + " | Selection rate:" + SELECTION_PERCENTAGE + " | Mutation rate:" + MUTATION_RATE + " | Seed:"
@@ -196,12 +246,10 @@ public class GeneticAlgorithm {
                 + HIDDEN_DIM + " | Input dim:"
                 + INPUT_DIM + " | Output dim:" + OUTPUT_DIM);
     }
-    
-    
 
     public static void main(String[] args) {
         System.out.println("Testing Genetic Algorithm");
-        GeneticAlgorithm ga = new GeneticAlgorithm();
+        GeneticAlgorithm ga = new GeneticAlgorithm("d");
         ga.run();
     }
 }

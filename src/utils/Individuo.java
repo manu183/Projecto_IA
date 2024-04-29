@@ -5,9 +5,9 @@ import java.util.Collections;
 
 public class Individuo implements Comparable<Individuo> {
     private FeedforwardNeuralNetwork fnn;
-    private int fitness;
+    private double fitness;
 
-    public Individuo(FeedforwardNeuralNetwork fnn, int fitness) {
+    public Individuo(FeedforwardNeuralNetwork fnn, double fitness) {
         this.fnn = fnn;
         this.fitness = fitness;
     }
@@ -17,15 +17,15 @@ public class Individuo implements Comparable<Individuo> {
     }
 
     public void setFNN(FeedforwardNeuralNetwork nn) {
-        this.fnn = fnn;
+        this.fnn = nn;
     }
 
 
-    public int getFitness() {
+    public double getFitness() {
         return fitness;
     }
 
-    public void setFitness(int fitness) {
+    public void setFitness(double fitness) {
         this.fitness = fitness;
     }
 
@@ -36,7 +36,7 @@ public class Individuo implements Comparable<Individuo> {
 
     @Override
     public int compareTo(Individuo o) {
-        return this.getFitness() - o.getFitness();
+        return (int)(this.getFitness() - o.getFitness());
     }
 
     
