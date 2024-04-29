@@ -2,6 +2,7 @@ package breakout;
 
 import javax.swing.JFrame;
 
+import utils.Commons;
 import utils.FeedforwardNeuralNetwork;
 import utils.GameController;
 import utils.GeneticAlgorithm;
@@ -23,11 +24,9 @@ public class Breakout extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		//Breakout game = new Breakout(new RandomController(), 999999999);
-		//Breakout game = new Breakout(new RandomController(), 0); //O classe que implementa o GameController é a NeuralNetwork
-		//FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(GeneticAlgorithm.INPUT_DIM, GeneticAlgorithm.HIDDEN_DIM, GeneticAlgorithm.OUTPUT_DIM, "scores/0.txt");
-		//Breakout nnGame = new Breakout(nn, GeneticAlgorithm.SEED);
-		//Breakout game = new Breakout(new FeedforwardNeuralNetwork(7, 5, 2), 0);
+		FeedforwardNeuralNetwork nn = FeedforwardNeuralNetwork.FNNfromFile(Commons.BREAKOUT_STATE_SIZE, 5,
+				Commons.BREAKOUT_NUM_ACTIONS, "scores/breakout/397063.txt");
+		Breakout nnGame = new Breakout(nn, GeneticAlgorithm.SEED);
 	}
 
 }

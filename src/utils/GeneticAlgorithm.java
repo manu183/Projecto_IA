@@ -10,16 +10,16 @@ import pacman.PacmanBoard;
 
 public class GeneticAlgorithm {
     private String gameName;
-    private int POPULATION_SIZE = 0; // Tamanho da população inicial ;
+    private int POPULATION_SIZE = 0;
     private int NUM_GENERATIONS = 0;
     private double MUTATION_RATE = 0;
-    private double SELECTION_PERCENTAGE = 0;
-    private int K_TOURNAMENT = 0;
-    private int FITNESS_GOAL = 0; // O número de fitness que se pretende alcançar
+    private double SELECTION_PERCENTAGE = 0; // Percentage of the population that is selected to the next generation
+    private int K_TOURNAMENT = 0; // Number of individuals that are selected to the tournament
+    private int FITNESS_GOAL = 0; // Fitness goal that the algorithm tries to reach
 
-    public int INPUT_DIM = 0; // Número de entradas da rede neural (estado do jogo)
-    public int HIDDEN_DIM = 0; // Número de neurônios na camada oculta
-    public int OUTPUT_DIM = 0; // Número de saídas da rede neural (ações do jogador)
+    public int INPUT_DIM = 0; // Number of inputs of the neural network
+    public int HIDDEN_DIM = 0; // Number of hidden nodes of the neural network
+    public int OUTPUT_DIM = 0; // Number of outputs of the neural network
 
     private Individuo[] population; // População de indivíduos
 
@@ -28,11 +28,11 @@ public class GeneticAlgorithm {
     public GeneticAlgorithm(String gameName) {
         if (gameName.toLowerCase().equals("breakout")) {
             this.gameName = gameName.toLowerCase();
-            POPULATION_SIZE = 377;
+            POPULATION_SIZE = 100;
             NUM_GENERATIONS = 1000;
-            MUTATION_RATE = 0.35;
+            MUTATION_RATE = 0.2;
             SELECTION_PERCENTAGE = 0.4;
-            K_TOURNAMENT = 5;
+            K_TOURNAMENT = 8;
             FITNESS_GOAL = 100000000;
             INPUT_DIM = Commons.BREAKOUT_STATE_SIZE;
             HIDDEN_DIM = 5;
@@ -58,13 +58,12 @@ public class GeneticAlgorithm {
         generatePopulation();
     }
 
-    private void generatePopulation() { // Criar a população inicial que é inicializada com pesos e bias aleatórios
+    private void generatePopulation() {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population[i] = new Individuo(new FeedforwardNeuralNetwork(INPUT_DIM, HIDDEN_DIM, OUTPUT_DIM), 0);
         }
     }
 
-    // Criar a nova população com base na população gerada e na população mantida
     private Individuo[] createNewPopulation(Individuo[] generatedPopulation, Individuo[] mantainedPopulation) {
         int generatedSize = generatedPopulation.length;
         int mantainedSize = mantainedPopulation.length;
@@ -73,29 +72,37 @@ public class GeneticAlgorithm {
                     "The sum of the generated and mantained populations must be equal to the population size");
         }
         Individuo[] newPopulation = new Individuo[POPULATION_SIZE];
-        for (int i = 0; i < mantainedSize; i++) {// Adicionar os indivíduos que foram mantidos à população
+        for (int i = 0; i < mantainedSize; i++) {
             newPopulation[i] = mantainedPopulation[i];
         }
-        for (int i = 0; i < generatedSize; i++) {// Adicionar os indivíduos gerados à população
+        for (int i = 0; i < generatedSize; i++) {
             newPopulation[mantainedSize + i] = generatedPopulation[i];
         }
         return newPopulation;
     }
 
-    private FeedforwardNeuralNetwork swapMutation(FeedforwardNeuralNetwork child) { // Aplicar a swap mutation a um
-                                                                                    // indivíduo
-        double[] charArray = child.getNeuralNetwork();
+    private FeedforwardNeuralNetwork swapMutation(FeedforwardNeuralNetwork child) { // Functions that swaps two random
+                                                                                    // weights of the neural network
+        double[] childArray = child.getNeuralNetwork();
         Random random = new Random();
-        int index1 = random.nextInt(charArray.length);
-        int index2 = random.nextInt(charArray.length);
-        double temp = charArray[index1];
-        charArray[index1] = charArray[index2];
-        charArray[index2] = temp;
-        FeedforwardNeuralNetwork newChild = new FeedforwardNeuralNetwork(INPUT_DIM, HIDDEN_DIM, OUTPUT_DIM, charArray);
+        int index1 = random.nextInt(childArray.length);
+        int index2 = random.nextInt(childArray.length);
+        double temp = childArray[index1];
+        childArray[index1] = childArray[index2];
+        childArray[index2] = temp;
+        FeedforwardNeuralNetwork newChild = new FeedforwardNeuralNetwork(INPUT_DIM, HIDDEN_DIM, OUTPUT_DIM, childArray);
         return newChild;
     }
 
-    private FeedforwardNeuralNetwork crossover(FeedforwardNeuralNetwork parent1, FeedforwardNeuralNetwork parent2) {
+    private FeedforwardNeuralNetwork crossover(FeedforwardNeuralNetwork parent1, FeedforwardNeuralNetwork parent2) { // Functions
+                                                                                                                     // that
+                                                                                                                     // crosses
+                                                                                                                     // two
+                                                                                                                     // parents
+                                                                                                                     // to
+                                                                                                                     // generate
+                                                                                                                     // a
+                                                                                                                     // child
         double[] childArray = new double[parent1.getNeuralNetwork().length];
         Random random = new Random();
         int middle = random.nextInt(parent1.getNeuralNetwork().length);
@@ -111,10 +118,9 @@ public class GeneticAlgorithm {
         return child;
     }
 
-    private FeedforwardNeuralNetwork selectParent() {
+    private FeedforwardNeuralNetwork selectParent() { // Select a parent to the crossover
         Individuo bigger = randomParent();
-        for (int i = 0; i < K_TOURNAMENT - 1; i++) { // É k_tournament-1 porque 1 dos k_tournaments foi atribuído ao
-                                                     // bigger
+        for (int i = 0; i < K_TOURNAMENT - 1; i++) {
             Individuo actual = randomParent();
             if (actual.getFitness() > bigger.getFitness()) {
                 bigger = actual;
@@ -123,15 +129,15 @@ public class GeneticAlgorithm {
         return bigger.getFNN();
     }
 
-    private Individuo randomParent() {
+    private Individuo randomParent() { // Select a random parent to the crossover
         Random random = new Random();
         int index = random.nextInt(POPULATION_SIZE);
         return population[index];
     }
 
-    private Individuo[] selection() {
-        Arrays.sort(population); // Ordenar a população por fitness
-        int selectedPopulationSize = POPULATION_SIZE-(int)(POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
+    private Individuo[] selection() { // Select the best individuals of the population to the next generation
+        Arrays.sort(population);
+        int selectedPopulationSize = POPULATION_SIZE - (int) (POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
         Individuo[] selectedPopulation = new Individuo[selectedPopulationSize];
 
         for (int i = 0; i < selectedPopulationSize; i++) {
@@ -140,20 +146,22 @@ public class GeneticAlgorithm {
         return selectedPopulation;
     }
 
-    private void mutatePopulation() { // Aplicar a mutação à população de acordo com a taxa de mutação
-        int numberOfMutations = (int) (POPULATION_SIZE * MUTATION_RATE);
+    private void mutatePopulation() { // Mutate the population
+        int numberOfMutations = (int) (POPULATION_SIZE * MUTATION_RATE); // Number of mutations
         int[] indexes = new int[numberOfMutations];
         indexes = Utils.generateNNumbers(POPULATION_SIZE, numberOfMutations);
         for (int actual : indexes) {
             Individuo toMutate = population[actual];
-            FeedforwardNeuralNetwork mutatedFNN = swapMutation(toMutate.getFNN()); // Aplicar a mutação ao indivíduo
-            Individuo mutatedIndividuo = new Individuo(mutatedFNN, 0); // O fitness é 0 porque ainda não foi calculado
-            population[actual] = mutatedIndividuo; // Substituir o indivíduo original pelo indivíduo mutado
+            FeedforwardNeuralNetwork mutatedFNN = swapMutation(toMutate.getFNN()); // Swap mutation
+            Individuo mutatedIndividuo = new Individuo(mutatedFNN, 0); // Create a new individual with the mutated
+                                                                       // neural network and fitness 0 because it was
+                                                                       // not evaluated yet
+            population[actual] = mutatedIndividuo;
         }
     }
 
-    private Individuo runGeneration() { // Executar uma geração e guardar os fitnesses de cada indivíduo retornando o
-                                        // melhor indivíduo
+    private Individuo runGeneration() { // Run a generation of the genetic algorithm and return the best individual of
+                                        // the generation
         Individuo genBest = new Individuo(null, 0);
         if (gameName.equals("breakout")) {
             for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -176,19 +184,23 @@ public class GeneticAlgorithm {
                     genBest = new Individuo(population[i].getFNN(), fitness);
                 }
             }
-        }else {
+        } else {
             throw new IllegalArgumentException("Invalid game!!!");
         }
         return genBest;
     }
 
-    public void run() {
+    public void run() { // Run the genetic algorithm
         int actualGeneration = 0;
         int stagnantGenerations = 0;
         double lastFitness = 0;
         Individuo bestOverall = new Individuo(null, 0);
 
-        while (actualGeneration < NUM_GENERATIONS && bestOverall.getFitness() < FITNESS_GOAL) {
+        while (actualGeneration < NUM_GENERATIONS && bestOverall.getFitness() < FITNESS_GOAL) { // Run the genetic
+                                                                                                // algorithm until the
+                                                                                                // number of generations
+                                                                                                // or the fitness goal
+                                                                                                // is reached
             Individuo genBest = runGeneration();
             int newPopulationSize = (int) (POPULATION_SIZE * (1 - SELECTION_PERCENTAGE));
             Individuo[] newPopulation = new Individuo[newPopulationSize];
@@ -229,14 +241,14 @@ public class GeneticAlgorithm {
             actualGeneration++;
         }
 
-        if(gameName.equals("breakout")){
-            Utils.printToFile("scores/breakout/" + (int)bestOverall.getFitness() + ".txt", bestOverall.getFNN());
+        if (gameName.equals("breakout")) {
+            Utils.printToFile("scores/breakout/" + (int) bestOverall.getFitness() + ".txt", bestOverall.getFNN());
             System.out.println(actualGeneration + " generations runned");
             Breakout game = new Breakout(bestOverall.getFNN(), SEED);
-        }else if(gameName.equals("pacman")){
-            Utils.printToFile("scores/pacman/" + (int)bestOverall.getFitness() + ".txt", bestOverall.getFNN());
+        } else if (gameName.equals("pacman")) {
+            Utils.printToFile("scores/pacman/" + (int) bestOverall.getFitness() + ".txt", bestOverall.getFNN());
             System.out.println(actualGeneration + " generations runned");
-            Pacman game = new Pacman(bestOverall.getFNN(),true, SEED);
+            Pacman game = new Pacman(bestOverall.getFNN(), true, SEED);
         }
         System.out.println("Best Individuo: " + bestOverall);
         System.out.println("Best Fitness: " + bestOverall.getFitness() + " | Population size:" + POPULATION_SIZE
@@ -249,7 +261,9 @@ public class GeneticAlgorithm {
 
     public static void main(String[] args) {
         System.out.println("Testing Genetic Algorithm");
-        GeneticAlgorithm ga = new GeneticAlgorithm("breakout");
-        ga.run();
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm("breakout");
+        geneticAlgorithm.run();
+        geneticAlgorithm = new GeneticAlgorithm("pacman");
+        geneticAlgorithm.run();
     }
 }
